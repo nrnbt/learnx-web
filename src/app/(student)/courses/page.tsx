@@ -1,9 +1,10 @@
+import UnderConstruction from "@/components/UnderConstruction";
 import { FunctionComponent } from "react";
 
 const CoursesPage: FunctionComponent = () => {
   return (
-    <div>
-      Courses
+    <div className="h-full w-full">
+      <UnderConstruction />
     </div>
   )
 }

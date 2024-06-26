@@ -111,7 +111,7 @@ const HomePage: FunctionComponent  = () => {
             Become teacher
           </Button>
         </Typography>
-        <div className="flex items-center">
+        <div className="flex items-center justify-center">
           <img
             src='/teachers.png'
             alt="become teacher"
