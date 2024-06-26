@@ -1,4 +1,4 @@
-import apiClient from "@/utils/api-client";
+import apiClient from '@/utils/api-client'
 
 export async function GET(request: Request) {
   try {

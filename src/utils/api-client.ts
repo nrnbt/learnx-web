@@ -1,31 +1,29 @@
-import axios from 'axios';
+import axios from 'axios'
 
 const apiClient = axios.create({
-  baseURL: process.env.LEARNX_OPEN_EDX_API || 'https://lms.learnx.mn/api',
+  baseURL: process.env.LEARNX_OPEN_EDX_API ?? 'https://lms.learnx.mn/api',
   headers: {
-    'Content-Type': 'application/json',
-  },
-});
+    'Content-Type': 'application/json'
+  }
+})
 
 apiClient.interceptors.request.use(
-  (config) => {
-    // You can add authorization tokens or other custom headers here
-    // config.headers.Authorization = `Bearer ${token}`;
-    return config;
+  async (config) => {
+    return config // No need for await here
   },
-  (error) => {
-    return Promise.reject(error);
+  async (error) => {
+    return Promise.reject(error) // No need for await here
   }
-);
+)
 
 apiClient.interceptors.response.use(
-  (response) => {
-    return response;
+  async (response) => {
+    return response // No need for await here
   },
-  (error) => {
+  async (error) => {
     // Handle errors globally
-    return Promise.reject(error);
+    return Promise.reject(error) // No need for await here
   }
-);
+)
 
-export default apiClient;
+export default apiClient

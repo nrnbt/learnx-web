@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent } from 'react'
 
 interface Props {
     text: string
@@ -6,7 +6,7 @@ interface Props {
 
 const CompTitle: FunctionComponent<Props> = ({ text }) => {
     return (
-        <div className="pt-8 mb-8 text-white text-[24px] md:text-[48px]">
+        <div className='pt-8 mb-8 text-white text-[24px] md:text-[48px]'>
             {text}
         </div>
     )

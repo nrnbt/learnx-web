@@ -1,4 +1,4 @@
-import { Course, Pagination } from "@/utils/data-types"
+import { Course, Pagination } from '@/utils/data-types'
 
 export interface GetCoursesResponse {
   results: Course[]

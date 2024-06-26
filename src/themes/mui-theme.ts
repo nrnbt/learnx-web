@@ -7,12 +7,12 @@ export const theme = createTheme({
     primary: {
       main: '#191A2C',
       dark: '#0F101C',
-      light: '#2E3048',
+      light: '#2E3048'
     },
     secondary: {
       main: '#A7E628',
       dark: '#6D9A1C',
-      light: '#D1F571',
+      light: '#D1F571'
     }
   }
 })
