@@ -8,23 +8,23 @@ const apiClient = axios.create({
   }
 })
 
-export async function GET(request: Request) {
+export async function GET (request: Request): Promise<Response> {
   try {
     const { searchParams } = new URL(request.url)
     const page = searchParams.get('page')
     const pageSize = searchParams.get('page_size')
 
     let data
-    
-    if (page && pageSize) {
+
+    if (page !== null && pageSize !== null) {
       const res = await apiClient.get(`/courses/v1/courses/?page=${page}&page_size=${pageSize}`)
-      data = res.data 
+      data = res.data
     } else {
-      const res = await apiClient.get(`/courses/v1/courses/`)
+      const res = await apiClient.get('/courses/v1/courses/')
       data = res.data
     }
-    
-    return NextResponse.json(data) // Ensure we return a response here
+
+    return NextResponse.json(data)
   } catch (error) {
     console.error(error)
     return new Response(JSON.stringify({ error: 'Failed to fetch courses' }), {

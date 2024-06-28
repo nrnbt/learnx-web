@@ -1,3 +1,10 @@
 {
-  "standard.enable": false
+  "standard.enable": true,
+  "standard.engine": "ts-standard",
+  "standard.autoFixOnSave": true,
+  "javascript.validate.enable": false,
+  "css.validate": false,
+  "editor.quickSuggestions": {
+    "strings": true
+  },
 }

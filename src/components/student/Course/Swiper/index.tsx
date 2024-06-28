@@ -31,7 +31,7 @@ const CourseSwiperLg: FunctionComponent<Props> = ({ courses }) => {
       pagination={{ clickable: true }}
     >
       {courses.map((course, idx) => (
-        <SwiperSlide 
+        <SwiperSlide
           key={idx}
           className='flex justify-center items-center h-full w-full'
         >

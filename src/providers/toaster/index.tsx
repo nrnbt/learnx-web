@@ -12,7 +12,7 @@ const SnackbarContext = createContext<SnackbarContextProps | undefined>(undefine
 
 export const useSnackbar = (): SnackbarContextProps => {
   const context = useContext(SnackbarContext)
-  if (!context) {
+  if (context == null) {
     throw new Error('useSnackbar must be used within a SnackbarProvider')
   }
   return context

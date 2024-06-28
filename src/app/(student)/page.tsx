@@ -6,11 +6,12 @@ import Testimonial from '@/components/student/Testimonial'
 import { useSnackbar } from '@/providers/toaster'
 import useCourse from '@/services/courses'
 import { Course } from '@/utils/data-types'
+import { isNOU } from '@/utils/null-check'
 import { Button, Typography } from '@mui/material'
 import Image from 'next/image'
 import { FunctionComponent, useEffect, useState } from 'react'
 
-const  testimonials = [
+const testimonials = [
   {
     by: 'John Smith',
     text: "I am thrilled to share that after completing this course, I successfully passed my Microsoft Azure Fundamentals exam! The course material was comprehensive and aligned perfectly with the exam requirements. I couldn't have done it without this fantastic resource."
@@ -22,31 +23,34 @@ const  testimonials = [
   {
     by: 'Michael Brown',
     text: 'I am delighted to announce that I am now a Google Cloud Certified Associate Cloud Engineer, thanks to this course. The lessons were detailed and well-structured, providing me with the knowledge and confidence to pass the exam on my first attempt. Highly recommended!'
-  },
+  }
 ]
 
-const HomePage: FunctionComponent  = () => {
+const HomePage: FunctionComponent = () => {
   const [topCourses, setTopCourses] = useState<Course[]>([])
-  const [loading, setLoading] = useState(false)
+  // const [loading, setLoading] = useState(false)
 
   const { getCourses } = useCourse()
   const { showSnackbar } = useSnackbar()
 
   useEffect(() => {
     fetchTopCourses()
+      .then(() => { })
+      .catch((e) => console.error(e))
   }, [])
-  
+
   const fetchTopCourses = async (): Promise<void> => {
     await getCourses({})
       .then((res) => {
-        if(res.results){
+        if (!isNOU(res.results)) {
           setTopCourses(res.results)
         } else {
           showSnackbar('Courses not found!.', 'error')
         }
       })
       .catch((e) => {
-        showSnackbar(e.message || e.error.message, 'error')
+        const err = !isNOU(e.message) ? e.message : e.error.message
+        showSnackbar(err, 'error')
       })
   }
 
@@ -63,10 +67,10 @@ const HomePage: FunctionComponent  = () => {
         </Typography>
         <div className='flex justify-center mt-8 md:mt-0'>
           <div className='relative flex justify-center items-center h-64 md:h-96 w-52 md:w-96'>
-            <div className='h-full w-full rounded-[100px]' style={{ background: 'linear-gradient(to bottom, #919AFF, #737373)' }}/>
+            <div className='h-full w-full rounded-[100px]' style={{ background: 'linear-gradient(to bottom, #919AFF, #737373)' }} />
             <div className='absolute flex top-4 h-[250px] md:h-[400px] w-[270px] md:w-[400px]'>
               <Image
-                src='/max.png' 
+                src='/max.png'
                 objectFit='contain'
                 layout='fill'
                 alt=''
@@ -77,11 +81,11 @@ const HomePage: FunctionComponent  = () => {
       </div>
       <div className='my-4'>
         <CompTitle text='Top courses' />
-        <CourseSwiper courses={topCourses}/>
+        <CourseSwiper courses={topCourses} />
       </div>
       <div className='my-4'>
         <CompTitle text='Top courses' />
-        <CourseSwiper courses={topCourses}/>
+        <CourseSwiper courses={topCourses} />
       </div>
       <div className='my-4'>
         <CompTitle text='How learners like you are achieving their goals' />
@@ -94,19 +98,19 @@ const HomePage: FunctionComponent  = () => {
       <div className='flex flex-col lg:flex-row justify-center my-8 gap-8 md:gap-16 w-full'>
         <Typography component='div' gutterBottom className='flex flex-col gap-8 text-[40px] md:text-[60px] font-bold justify-center items-center mb-0 text-white'>
           <div>Wanna become <div className='flex'>Learn <div className='text-secondary'>X</div>’s Teacher?</div></div>
-          <Button 
-              size='large'
-              sx={{
-                paddingX: '20px',
-                paddingY: '10px',
-                background: '#A7E628',
-                borderRadius: '40px',
-                '&:hover': {
-                  background: '#D1F571',
-                },
-              }}
-              variant='contained'
-              className='text-black'
+          <Button
+            size='large'
+            sx={{
+              paddingX: '20px',
+              paddingY: '10px',
+              background: '#A7E628',
+              borderRadius: '40px',
+              '&:hover': {
+                background: '#D1F571'
+              }
+            }}
+            variant='contained'
+            className='text-black'
           >
             Become teacher
           </Button>

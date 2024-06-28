@@ -24,7 +24,7 @@ const pages: NavPage[] = [
   { name: 'Home', link: '/' },
   { name: 'Courses', link: '/courses' },
   { name: 'About Us', link: '/about' },
-  { name: 'Contact', link: '/contact' },
+  { name: 'Contact', link: '/contact' }
 ]
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
@@ -41,14 +41,14 @@ const StudentAppBar: FunctionComponent = () => {
   }
 
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
+    <AppBar position='static'>
+      <Container maxWidth='xl'>
         <Toolbar disableGutters className='flex justify-between'>
           <Typography
-            variant="h6"
+            variant='h6'
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            component='a'
+            href='#app-bar-with-responsive-menu'
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -56,58 +56,58 @@ const StudentAppBar: FunctionComponent = () => {
               fontWeight: 700,
               letterSpacing: '.3rem',
               color: 'inherit',
-              textDecoration: 'none',
+              textDecoration: 'none'
             }}
           >
-            <img 
-              src="/LearnX-logo.png"
-              alt="LearnX logo"
-              className='h-full object-contain' 
+            <img
+              src='/LearnX-logo.png'
+              alt='LearnX logo'
+              className='h-full object-contain'
             />
           </Typography>
 
           <Box sx={{ flex: 1, display: { xs: 'flex', md: 'none' }, justifyContent: 'center' }}>
             <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
+              size='large'
+              aria-label='account of current user'
+              aria-controls='menu-appbar'
+              aria-haspopup='true'
               onClick={(e) => setAnchorElNav(e.currentTarget)}
-              color="inherit"
+              color='inherit'
             >
               <MenuIcon />
             </IconButton>
             <Menu
-              id="menu-appbar"
+              id='menu-appbar'
               anchorEl={anchorElNav}
               anchorOrigin={{
                 vertical: 'bottom',
-                horizontal: 'left',
+                horizontal: 'left'
               }}
               keepMounted
               transformOrigin={{
                 vertical: 'top',
-                horizontal: 'left',
+                horizontal: 'left'
               }}
               open={Boolean(anchorElNav)}
               onClose={() => setAnchorElNav(null)}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: 'block', md: 'none' }
               }}
             >
               {pages.map((page, idx) => (
                 <MenuItem key={idx} onClick={() => handleNavClick(page.link)}>
-                  <Typography textAlign="center">{page.name}</Typography>
+                  <Typography textAlign='center'>{page.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
 
           <Typography
-            variant="h5"
+            variant='h5'
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            component='a'
+            href='#app-bar-with-responsive-menu'
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -116,16 +116,16 @@ const StudentAppBar: FunctionComponent = () => {
               fontWeight: 700,
               letterSpacing: '.3rem',
               color: 'inherit',
-              textDecoration: 'none',
+              textDecoration: 'none'
             }}
           >
-            <img 
-              src="/LearnX-logo.png"
-              alt="LearnX logo"
-              className='h-full object-contain' 
+            <img
+              src='/LearnX-logo.png'
+              alt='LearnX logo'
+              className='h-full object-contain'
             />
           </Typography>
-          
+
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, width: '100%', justifyContent: 'center' }}>
             {pages.map((page, idx) => (
               <Button
@@ -143,49 +143,48 @@ const StudentAppBar: FunctionComponent = () => {
           </Box>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            <Button 
+            <Button
               sx={{
                 borderColor: '#A7E628',
                 borderRadius: '40px',
                 borderWidth: '2px',
                 '&:hover': {
-                  borderColor: '#D1F571',
+                  borderColor: '#D1F571'
                 },
                 paddingX: '20px'
               }}
-              className='text-white' 
+              className='text-white'
               variant='outlined'
             >
               Register
             </Button>
           </Box>
 
-
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title='Open settings'>
               <IconButton onClick={(e) => setAnchorElUser(e.currentTarget)} sx={{ p: 0 }}>
                 {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
               </IconButton>
             </Tooltip>
             <Menu
               sx={{ mt: '45px' }}
-              id="menu-appbar"
+              id='menu-appbar'
               anchorEl={anchorElUser}
               anchorOrigin={{
                 vertical: 'top',
-                horizontal: 'right',
+                horizontal: 'right'
               }}
               keepMounted
               transformOrigin={{
                 vertical: 'top',
-                horizontal: 'right',
+                horizontal: 'right'
               }}
               open={Boolean(anchorElUser)}
               onClose={() => setAnchorElUser(null)}
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={() => setAnchorElUser(null)}>
-                  <Typography textAlign="center">{setting}</Typography>
+                  <Typography textAlign='center'>{setting}</Typography>
                 </MenuItem>
               ))}
             </Menu>

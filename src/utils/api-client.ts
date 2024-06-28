@@ -12,7 +12,7 @@ apiClient.interceptors.request.use(
     return config // No need for await here
   },
   async (error) => {
-    return Promise.reject(error) // No need for await here
+    return await Promise.reject(error) // No need for await here
   }
 )
 
@@ -22,7 +22,7 @@ apiClient.interceptors.response.use(
   },
   async (error) => {
     // Handle errors globally
-    return Promise.reject(error) // No need for await here
+    return await Promise.reject(error) // No need for await here
   }
 )
 

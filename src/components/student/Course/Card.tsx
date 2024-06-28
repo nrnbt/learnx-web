@@ -1,7 +1,8 @@
-import { Course } from "@/utils/data-types"
-import { Typography } from "@mui/material"
+import { Course } from '@/utils/data-types'
+import { Typography } from '@mui/material'
 import cn from 'classnames'
-import { FunctionComponent } from "react"
+import { useRouter } from 'next/navigation'
+import { FunctionComponent } from 'react'
 
 interface Props {
   course: Course
@@ -9,21 +10,27 @@ interface Props {
 }
 
 const CourseCard: FunctionComponent<Props> = ({ course, classname }) => {
+  const router = useRouter()
+
+  const handleCourseClick = (): void => {
+    router.push('/courses/' + course.id)
+  }
+
   return (
-    <div className={cn('max-w-[345px] w-full', classname)}>
+    <div className={cn('max-w-[345px] w-full cursor-pointer', classname)} onClick={handleCourseClick}>
       <img
         src={course.blocks_url.split('/api')[0] + course.media.course_image.uri}
         alt={course.name}
-        className="border-secondary border-4 rounded-xl w-full h-[230px] object-cover"
+        className='border-secondary border-4 rounded-xl w-full h-[230px] object-cover'
       />
-      <div className="flex flex-col gap-2 pt-4 text-white">
-        <Typography gutterBottom variant="h5" component="div" className="font-semibold">
+      <div className='flex flex-col gap-2 pt-4 text-white'>
+        <Typography gutterBottom variant='h5' component='div' className='font-semibold'>
           {course.name}
         </Typography>
-        <Typography variant="body2" color="">
+        <Typography variant='body2' color=''>
           {course.short_description}
         </Typography>
-        <Typography variant="body2" color="">
+        <Typography variant='body2' color=''>
           By: {course.org}
         </Typography>
       </div>
