@@ -107,14 +107,7 @@ const HomePage: FunctionComponent = () => {
       </div>
       <div className='my-4'>
         <CompTitle text='Top courses' />
-        {topC1loading ?
-          (
-            <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center', color: 'white' }}>
-              <CircularProgress className='text-white' />
-            </Box>
-          ) : (
-            <CourseSwiper courses={topCourses1} />
-          )}
+        <CourseSwiper courses={topCourses1} />
       </div>
       {/* <div className='my-4'>
         <CompTitle text='Top courses' />
