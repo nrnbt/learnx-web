@@ -131,7 +131,8 @@ const StudentAppBar: FunctionComponent = () => {
               <Button
                 key={idx}
                 onClick={() => handleNavClick(page.link)}
-                className='relative my-4 text-white block'
+                className='relative my-4 text-white block text-md'
+                variant='text'
               >
                 <div className={cn(
                   'absolute top-0 bottom-0 right-0 left-0',
@@ -144,16 +145,6 @@ const StudentAppBar: FunctionComponent = () => {
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             <Button
-              sx={{
-                borderColor: '#A7E628',
-                borderRadius: '40px',
-                borderWidth: '2px',
-                '&:hover': {
-                  borderColor: '#D1F571'
-                },
-                paddingX: '20px'
-              }}
-              className='text-white'
               variant='outlined'
             >
               Register

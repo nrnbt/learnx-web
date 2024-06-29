@@ -7,8 +7,7 @@ import { useSnackbar } from '@/providers/toaster'
 import useCourse from '@/services/courses'
 import { Course } from '@/utils/data-types'
 import { isNOU } from '@/utils/null-check'
-import { Button, Typography } from '@mui/material'
-import Image from 'next/image'
+import { Box, Button, CircularProgress, Typography } from '@mui/material'
 import { FunctionComponent, useEffect, useState } from 'react'
 
 const testimonials = [
@@ -27,23 +26,29 @@ const testimonials = [
 ]
 
 const HomePage: FunctionComponent = () => {
-  const [topCourses, setTopCourses] = useState<Course[]>([])
-  // const [loading, setLoading] = useState(false)
+  const [topCourses1, setTopCourses1] = useState<Course[]>([])
+  const [topCourses2, setTopCourses2] = useState<Course[]>([])
+  const [topC1loading, setTopC1Loading] = useState(false)
+  const [topC2loading, setTopC2Loading] = useState(false)
 
   const { getCourses } = useCourse()
   const { showSnackbar } = useSnackbar()
 
   useEffect(() => {
-    fetchTopCourses()
+    fetchTopCourses1()
+      .then(() => { })
+      .catch((e) => console.error(e))
+    fetchTopCourses2()
       .then(() => { })
       .catch((e) => console.error(e))
   }, [])
 
-  const fetchTopCourses = async (): Promise<void> => {
+  const fetchTopCourses1 = async (): Promise<void> => {
+    setTopC1Loading(true)
     await getCourses({})
       .then((res) => {
         if (!isNOU(res.results)) {
-          setTopCourses(res.results)
+          setTopCourses1(res.results)
         } else {
           showSnackbar('Courses not found!.', 'error')
         }
@@ -51,6 +56,28 @@ const HomePage: FunctionComponent = () => {
       .catch((e) => {
         const err = !isNOU(e.message) ? e.message : e.error.message
         showSnackbar(err, 'error')
+      })
+      .finally(() => {
+        setTopC1Loading(false)
+      })
+  }
+
+  const fetchTopCourses2 = async (): Promise<void> => {
+    setTopC2Loading(true)
+    await getCourses({})
+      .then((res) => {
+        if (!isNOU(res.results)) {
+          setTopCourses2(res.results)
+        } else {
+          showSnackbar('Courses not found!.', 'error')
+        }
+      })
+      .catch((e) => {
+        const err = !isNOU(e.message) ? e.message : e.error.message
+        showSnackbar(err, 'error')
+      })
+      .finally(() => {
+        setTopC2Loading(false)
       })
   }
 
@@ -69,11 +96,10 @@ const HomePage: FunctionComponent = () => {
           <div className='relative flex justify-center items-center h-64 md:h-96 w-52 md:w-96'>
             <div className='h-full w-full rounded-[100px]' style={{ background: 'linear-gradient(to bottom, #919AFF, #737373)' }} />
             <div className='absolute flex top-4 h-[250px] md:h-[400px] w-[270px] md:w-[400px]'>
-              <Image
+              <img
                 src='/max.png'
-                objectFit='contain'
-                layout='fill'
-                alt=''
+                alt='learner'
+                className='object-fill'
               />
             </div>
           </div>
@@ -81,12 +107,25 @@ const HomePage: FunctionComponent = () => {
       </div>
       <div className='my-4'>
         <CompTitle text='Top courses' />
-        <CourseSwiper courses={topCourses} />
+        {topC1loading ?
+          (
+            <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center', color: 'white' }}>
+              <CircularProgress className='text-white' />
+            </Box>
+          ) : (
+            <CourseSwiper courses={topCourses1} />
+          )}
       </div>
-      <div className='my-4'>
+      {/* <div className='my-4'>
         <CompTitle text='Top courses' />
-        <CourseSwiper courses={topCourses} />
-      </div>
+        {topC2loading ? (
+          <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center', color: 'white' }}>
+            <CircularProgress className='text-white' />
+          </Box>
+        ) : (
+          <CourseSwiper courses={topCourses2} />
+        )}
+      </div> */}
       <div className='my-4'>
         <CompTitle text='How learners like you are achieving their goals' />
         <div className='grid grid-cols-1 md:grid-cols-3 gap-8 w-full px-4'>

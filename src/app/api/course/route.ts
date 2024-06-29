@@ -1,5 +1,6 @@
+import { isNOU } from '@/utils/null-check'
 import axios from 'axios'
-import { NextResponse } from 'next/server' // Import NextResponse for handling responses
+import { NextResponse } from 'next/server'
 
 const apiClient = axios.create({
   baseURL: process.env.LEARNX_OPEN_EDX_API ?? 'https://lms.learnx.mn/api',
@@ -16,8 +17,8 @@ export async function GET (request: Request): Promise<Response> {
 
     let data
 
-    if (page !== null && pageSize !== null) {
-      const res = await apiClient.get(`/courses/v1/courses/?page=${page}&page_size=${pageSize}`)
+    if (!isNOU(page) && !!isNOU(pageSize)) {
+      const res = await apiClient.get(`/courses/v1/courses/?page=${page ?? ''}&page_size=${pageSize ?? ''}`)
       data = res.data
     } else {
       const res = await apiClient.get('/courses/v1/courses/')
