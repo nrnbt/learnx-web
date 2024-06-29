@@ -172,3 +172,8 @@ export interface CourseOutline {
   welcome_message_html: string
   user_has_passing_grade: boolean
 }
+
+export interface CourseOutlineRes {
+  outline?: CourseOutline
+  detail?: string
+}

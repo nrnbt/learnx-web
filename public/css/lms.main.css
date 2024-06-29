@@ -1,0 +1,20 @@
+h2 {
+  font-size: large;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+section {
+  margin-bottom: 15px;
+}
+
+.teacher {
+  height: fit-content;
+  width: fit-content;
+  margin-bottom: 40px;
+}
+
+.teacher-image {
+  height: fit-content;
+  width: fit-content;
+}

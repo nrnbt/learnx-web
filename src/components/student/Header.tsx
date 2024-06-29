@@ -40,6 +40,10 @@ const StudentAppBar: FunctionComponent = () => {
     router.push(link)
   }
 
+  const handlePushRegister = (): void => {
+    router.push('/register')
+  }
+
   return (
     <AppBar position='static'>
       <Container maxWidth='xl'>
@@ -138,7 +142,7 @@ const StudentAppBar: FunctionComponent = () => {
                   'absolute top-0 bottom-0 right-0 left-0',
                   pathname === page.link && 'border-b border-secondary transition-all duration-300 ease-in')}
                 />
-                {page.name}
+                <div className='text-white'>{page.name}</div>
               </Button>
             ))}
           </Box>
@@ -146,6 +150,7 @@ const StudentAppBar: FunctionComponent = () => {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             <Button
               variant='outlined'
+              onClick={handlePushRegister}
             >
               Register
             </Button>

@@ -5,9 +5,10 @@ import CourseSwiper from '@/components/student/Course/Swiper'
 import Testimonial from '@/components/student/Testimonial'
 import { useSnackbar } from '@/providers/toaster'
 import useCourse from '@/services/courses'
+import { theme } from '@/themes/mui-theme'
 import { Course } from '@/utils/data-types'
 import { isNOU } from '@/utils/null-check'
-import { Button, Typography } from '@mui/material'
+import { Box, Button, CircularProgress, Typography, useMediaQuery } from '@mui/material'
 import { FunctionComponent, useEffect, useState } from 'react'
 
 const testimonials = [
@@ -26,10 +27,10 @@ const testimonials = [
 ]
 
 const HomePage: FunctionComponent = () => {
-  const [topCourses1, setTopCourses1] = useState<Course[]>([])
-  // const [topCourses2, setTopCourses2] = useState<Course[]>([])
-  // const [topC1loading, setTopC1Loading] = useState(false)
-  // const [topC2loading, setTopC2Loading] = useState(false)
+  const [topCourses, setTopCourses] = useState<Course[]>([])
+  const [coursesloading, setCoursesloading] = useState(false)
+
+  const mobileLayout = useMediaQuery(theme.breakpoints.up('md'))
 
   const { getCourses } = useCourse()
   const { showSnackbar } = useSnackbar()
@@ -38,17 +39,14 @@ const HomePage: FunctionComponent = () => {
     fetchTopCourses1()
       .then(() => { })
       .catch((e) => console.error(e))
-    fetchTopCourses2()
-      .then(() => { })
-      .catch((e) => console.error(e))
   }, [])
 
   const fetchTopCourses1 = async (): Promise<void> => {
-    // setTopC1Loading(true)
+    setCoursesloading(true)
     await getCourses({})
       .then((res) => {
         if (!isNOU(res.results)) {
-          setTopCourses1(res.results)
+          setTopCourses(res.results)
         } else {
           showSnackbar('Courses not found!.', 'error')
         }
@@ -58,33 +56,19 @@ const HomePage: FunctionComponent = () => {
         showSnackbar(err, 'error')
       })
       .finally(() => {
-        // setTopC1Loading(false)
-      })
-  }
-
-  const fetchTopCourses2 = async (): Promise<void> => {
-    // setTopC2Loading(true)
-    await getCourses({})
-      .then((res) => {
-        if (!isNOU(res.results)) {
-          // setTopCourses2(res.results)
-        } else {
-          showSnackbar('Courses not found!.', 'error')
-        }
-      })
-      .catch((e) => {
-        const err = !isNOU(e.message) ? e.message : e.error.message
-        showSnackbar(err, 'error')
-      })
-      .finally(() => {
-        // setTopC2Loading(false)
+        setCoursesloading(false)
       })
   }
 
   return (
     <div className='w-full'>
       <div className='flex flex-col lg:flex-row justify-center my-8 gap-8 md:gap-32 w-full'>
-        <Typography component='div' gutterBottom className='text-[40px] md:text-[80px] font-bold flex flex-col justify-center mb-0 text-white'>
+        <Typography
+          component='div'
+          gutterBottom
+          className='flex flex-col justify-center mb-0 text-white'
+          style={{ fontSize: !mobileLayout ? '40px' : '80px', fontWeight: 'bold' }}
+        >
           <span>GROW UP</span>
           <span className='flex gap-4'>
             <span className='text-secondary'>{'YOUR '}</span>
@@ -107,18 +91,16 @@ const HomePage: FunctionComponent = () => {
       </div>
       <div className='my-4'>
         <CompTitle text='Top courses' />
-        <CourseSwiper courses={topCourses1} />
+        {coursesloading
+          ? (
+            <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center', color: 'white' }}>
+              <CircularProgress className='text-white' />
+            </Box>
+          )
+          : (
+            <CourseSwiper courses={topCourses} />
+          )}
       </div>
-      {/* <div className='my-4'>
-        <CompTitle text='Top courses' />
-        {topC2loading ? (
-          <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center', color: 'white' }}>
-            <CircularProgress className='text-white' />
-          </Box>
-        ) : (
-          <CourseSwiper courses={topCourses2} />
-        )}
-      </div> */}
       <div className='my-4'>
         <CompTitle text='How learners like you are achieving their goals' />
         <div className='grid grid-cols-1 md:grid-cols-3 gap-8 w-full px-4'>
@@ -151,7 +133,7 @@ const HomePage: FunctionComponent = () => {
           <img
             src='/teachers.png'
             alt='become teacher'
-            className='p-8 md:p-16 h-full object-cover'
+            className='p-4 md:p-16 h-full object-cover'
           />
         </div>
       </div>

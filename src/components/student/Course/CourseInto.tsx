@@ -1,15 +1,19 @@
 'use client'
 
-import { Course, CourseDate, CourseHomeMeta, CourseOutline } from '@/utils/data-types'
+import { Course, CourseDate, CourseHomeMeta, CourseOutlineRes } from '@/utils/data-types'
 import { isNOU } from '@/utils/null-check'
 import { Box, Button, Tab, Tabs } from '@mui/material'
 import { FunctionComponent, SyntheticEvent, useState } from 'react'
+import '../../../../public/css/lms.main.css'
+import { useAuthContext } from '@/providers/auth'
+import { useRouter } from 'next/navigation'
+import CourseOutlineInfo from './Outline'
 
 interface Props {
-  courseData?: Course
-  courseDate?: CourseDate
-  courseHomeMeta?: CourseHomeMeta
-  courseOutline?: CourseOutline
+  courseData?: Course | null
+  courseDate?: CourseDate | null
+  courseHomeMeta?: CourseHomeMeta | null
+  courseOutline?: CourseOutlineRes | null
 }
 
 interface TabPanelProps {
@@ -48,7 +52,7 @@ const addBaseUrlToImgSrc = (params: { htmlString?: string, baseUrl: string }): s
   const images = doc.querySelectorAll('img')
   images.forEach(img => {
     const src = img.getAttribute('src')
-    if (!isNOU(src) && !src?.startsWith('http')) {
+    if (!isNOU(src) && !src.startsWith('http')) {
       img.setAttribute('src', `${baseUrl}${src}`)
     }
   })
@@ -60,43 +64,53 @@ const CourseIntro: FunctionComponent<Props> = ({ courseData, courseDate, courseH
   const [value, setValue] = useState(0)
   const overviewWithBaseUrl = addBaseUrlToImgSrc({ htmlString: courseData?.overview, baseUrl })
 
+  const { isLoggedIn } = useAuthContext()
+  const router = useRouter()
+
   const handleChange = (event: SyntheticEvent, newValue: number): void => {
     setValue(newValue)
   }
 
   const handleEnroll = (): void => {
-    console.log('enroll')
+    if (isLoggedIn) {
+      router.push(`/enroll/${courseData?.id ?? ''}`)
+    } else {
+      router.push('/login')
+    }
   }
 
   return (
     <div className='flex flex-col w-full justify-between items-center'>
-      <div className='grid grid-cols-1 md:grid-cols-2 w-full'>
+      <div className='grid grid-cols-1 gap-8 md:grid-cols-2 w-full'>
         <div className='flex flex-col gap-2 justify-center w-full text-white'>
           <div className='text-3xl font-bold'>{courseData?.name}</div>
           <div>Number: {courseData?.number}</div>
           <div>Short Desc: {courseData?.short_description}</div>
           <div>By: {courseData?.org}</div>
           <div>Starts: {courseData?.start_display}</div>
-          <div>
+          <div className='pt-4'>
             <Button
               variant='contained'
               onClick={handleEnroll}
+              className='font-bold'
             >
               Enroll Now
             </Button>
           </div>
         </div>
-        <img
-          src={baseUrl + (courseData?.media.course_image.uri ?? '')}
-          alt={courseData?.name}
-          className='w-full object-contain border-4 border-secondary rounded-xl'
-        />
+        <div className='flex justify-center md:justify-end'>
+          <img
+            src={baseUrl + (courseData?.media.course_image.uri ?? '')}
+            alt={courseData?.name}
+            className='w-full m-4 md:m-0 md:w-2/3 object-cover border-4 border-secondary rounded-xl'
+          />
+        </div>
       </div>
-      <Box sx={{ width: '100%' }}>
+      <Box sx={{ width: '100%', marginTop: '24px' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange} aria-label='Course Tabs'>
-            <Tab className='text-white' label='Overview' {...a11yProps(0)} />
-            <Tab className='text-white' label='Outline' {...a11yProps(1)} />
+            <Tab label='Overview' {...a11yProps(0)} />
+            <Tab label='Outline' {...a11yProps(1)} />
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
@@ -106,7 +120,9 @@ const CourseIntro: FunctionComponent<Props> = ({ courseData, courseDate, courseH
           />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          {JSON.stringify(courseOutline)}
+          <div className='text-white'>
+            {isNOU(courseOutline?.outline) ? courseOutline?.detail : <CourseOutlineInfo outline={courseOutline.outline} />}
+          </div>
         </CustomTabPanel>
       </Box>
     </div>
