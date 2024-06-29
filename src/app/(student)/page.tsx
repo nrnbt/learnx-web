@@ -7,7 +7,7 @@ import { useSnackbar } from '@/providers/toaster'
 import useCourse from '@/services/courses'
 import { Course } from '@/utils/data-types'
 import { isNOU } from '@/utils/null-check'
-import { Box, Button, CircularProgress, Typography } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import { FunctionComponent, useEffect, useState } from 'react'
 
 const testimonials = [
@@ -27,9 +27,9 @@ const testimonials = [
 
 const HomePage: FunctionComponent = () => {
   const [topCourses1, setTopCourses1] = useState<Course[]>([])
-  const [topCourses2, setTopCourses2] = useState<Course[]>([])
-  const [topC1loading, setTopC1Loading] = useState(false)
-  const [topC2loading, setTopC2Loading] = useState(false)
+  // const [topCourses2, setTopCourses2] = useState<Course[]>([])
+  // const [topC1loading, setTopC1Loading] = useState(false)
+  // const [topC2loading, setTopC2Loading] = useState(false)
 
   const { getCourses } = useCourse()
   const { showSnackbar } = useSnackbar()
@@ -44,7 +44,7 @@ const HomePage: FunctionComponent = () => {
   }, [])
 
   const fetchTopCourses1 = async (): Promise<void> => {
-    setTopC1Loading(true)
+    // setTopC1Loading(true)
     await getCourses({})
       .then((res) => {
         if (!isNOU(res.results)) {
@@ -58,16 +58,16 @@ const HomePage: FunctionComponent = () => {
         showSnackbar(err, 'error')
       })
       .finally(() => {
-        setTopC1Loading(false)
+        // setTopC1Loading(false)
       })
   }
 
   const fetchTopCourses2 = async (): Promise<void> => {
-    setTopC2Loading(true)
+    // setTopC2Loading(true)
     await getCourses({})
       .then((res) => {
         if (!isNOU(res.results)) {
-          setTopCourses2(res.results)
+          // setTopCourses2(res.results)
         } else {
           showSnackbar('Courses not found!.', 'error')
         }
@@ -77,7 +77,7 @@ const HomePage: FunctionComponent = () => {
         showSnackbar(err, 'error')
       })
       .finally(() => {
-        setTopC2Loading(false)
+        // setTopC2Loading(false)
       })
   }
 
