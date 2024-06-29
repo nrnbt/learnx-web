@@ -96,10 +96,10 @@ const HomePage: FunctionComponent = () => {
             <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center', color: 'white' }}>
               <CircularProgress className='text-white' />
             </Box>
-          )
+            )
           : (
             <CourseSwiper courses={topCourses} />
-          )}
+            )}
       </div>
       <div className='my-4'>
         <CompTitle text='How learners like you are achieving their goals' />
