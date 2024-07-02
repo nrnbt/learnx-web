@@ -1,13 +1,6 @@
+import apiClient from '@/utils/api-client'
 import { isNOU } from '@/utils/null-check'
-import axios from 'axios'
 import { NextResponse } from 'next/server'
-
-const apiClient = axios.create({
-  baseURL: process.env.LEARNX_OPEN_EDX_API ?? 'https://lms.learnx.mn/api',
-  headers: {
-    'Content-Type': 'application/json'
-  }
-})
 
 export async function GET (request: Request): Promise<Response> {
   try {

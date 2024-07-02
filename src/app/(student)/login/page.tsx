@@ -1,9 +1,10 @@
+import LoginForm from '@/components/forms/LoginForm'
 import { FunctionComponent } from 'react'
 
 const LoginPage: FunctionComponent = () => {
   return (
-    <div>
-
+    <div className='flex w-full'>
+      <LoginForm />
     </div>
   )
 }

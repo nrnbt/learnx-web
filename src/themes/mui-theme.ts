@@ -70,6 +70,53 @@ export const theme = createTheme({
           }
         }
       }
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiInputBase-root': {
+            color: '#e0e0e0',
+            backgroundColor: '#282a36',
+            borderRadius: '4px'
+          },
+          width: '100%',
+          '& .MuiInputLabel-root': {
+            color: '#a0a0b0'
+          },
+          '& .MuiInput-underline:before': {
+            borderBottomColor: '#3b3b5c'
+          },
+          '& .MuiInput-underline:hover:before': {
+            borderBottomColor: '#ffffff'
+          },
+          '& .MuiInput-underline:after': {
+            borderBottomColor: '#ffffff'
+          },
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: '#3b3b5c'
+            },
+            '&:hover fieldset': {
+              borderColor: '#ffffff'
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#ffffff'
+            },
+            '&.Mui-focused .MuiInputLabel-root': {
+              color: 'white !important'
+            }
+          },
+          '& .MuiFilledInput-root': {
+            backgroundColor: '#282a36',
+            '&:hover': {
+              backgroundColor: '#3a3a4a'
+            },
+            '&.Mui-focused': {
+              backgroundColor: '#3a3a4a'
+            }
+          }
+        }
+      }
     }
   }
 })
