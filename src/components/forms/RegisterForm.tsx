@@ -193,7 +193,7 @@ const RegisterForm: FunctionComponent<Props> = ({ courseId }) => {
         )}
       </Formik>
       <div
-        className='text-white hover:cursor-pointer'
+        className='text-white hover:cursor-pointer hover:underline'
         onClick={handleNavigateLogin}
       >
         Already have account?

@@ -58,7 +58,7 @@ export async function POST (request: Request): Promise<Response> {
   } catch (error: any) {
     const res = error?.response?.data
     console.error(res ?? error)
-    return new Response(JSON.stringify({ error: 'Failed to fetch courses', errorCode: res?.errorCode, errors: res }), {
+    return new Response(JSON.stringify({ error: 'Failed to create user!', errorCode: res?.errorCode, errors: res }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json'

@@ -1,9 +1,9 @@
 'use client'
 
-import jwt from 'jsonwebtoken'
-import { FunctionComponent, PropsWithChildren, createContext, useContext, useEffect, useState } from 'react'
-import { AuthContext, User } from './types'
 import { isNOU } from '@/utils/null-check'
+import { FunctionComponent, PropsWithChildren, createContext, useContext, useEffect, useState } from 'react'
+import { AuthContext, OpenEdxCredentials } from './types'
+import { useRouter } from 'next/navigation'
 
 const authContext = createContext<AuthContext>({
   isLoggedIn: false,
@@ -17,25 +17,26 @@ const authContext = createContext<AuthContext>({
 })
 
 export const AuthProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
-  const [user, setUser] = useState<User | undefined | null>(null)
+  const [credentials, setCredentials] = useState<OpenEdxCredentials | undefined | null>(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [loaded, setLoaded] = useState(false)
+
+  const router = useRouter()
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
     if (!isNOU(storedUser)) {
-      setUser(JSON.parse(storedUser ?? ''))
+      setCredentials(JSON.parse(storedUser ?? ''))
       setIsLoggedIn(true)
     }
     setLoaded(true)
   }, [])
 
-  const login = async (token: string): Promise<void> => {
-    const user = jwt.decode(token)
-    if (user !== undefined) {
-      setUser(user as User)
-      localStorage.setItem('user', JSON.stringify(user))
-      setIsLoggedIn(true)
+  const login = async (cred: OpenEdxCredentials): Promise<void> => {
+    if (!isNOU(cred)) {
+      localStorage.setItem('user', JSON.stringify(cred))
+      setIsLoggedIn(cred.edxLoggedIn)
+      router.push('/dashboard')
     } else {
       console.error('user undefined')
     }
@@ -43,12 +44,12 @@ export const AuthProvider: FunctionComponent<PropsWithChildren> = ({ children })
 
   const logout = async (): Promise<void> => {
     localStorage.removeItem('user')
-    setUser(null)
+    setCredentials(null)
     setIsLoggedIn(false)
   }
 
   return (
-    <authContext.Provider value={{ loaded, user, isLoggedIn, login, logout }}>
+    <authContext.Provider value={{ loaded, credentials, isLoggedIn, login, logout }}>
       {children}
     </authContext.Provider>
   )

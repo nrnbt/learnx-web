@@ -18,7 +18,7 @@ const RootLayout: FunctionComponent<PropsWithChildren> = ({ children }) => {
   return (
     <html lang='en'>
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="16" />
+        <link rel='icon' href='/favicon.ico' sizes='16' />
       </head>
       <body className={inter.className}>
         <ThemeProvider theme={theme}>

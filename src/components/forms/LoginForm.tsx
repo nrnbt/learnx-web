@@ -1,5 +1,7 @@
 'use client'
 
+import { useAuthContext } from '@/providers/auth'
+import { EdxUserInfo, OpenEdxCredentials } from '@/providers/auth/types'
 import { useSnackbar } from '@/providers/toaster'
 import { encryptData } from '@/utils/crypro'
 import { Button, TextField } from '@mui/material'
@@ -41,6 +43,7 @@ const LoginForm: FunctionComponent = () => {
   }
 
   const { showSnackbar } = useSnackbar()
+  const { login } = useAuthContext()
   const router = useRouter()
 
   const handleNavigateRegister = (): void => {
@@ -60,9 +63,42 @@ const LoginForm: FunctionComponent = () => {
         throw new Error('Network response was not ok')
       }
 
-      const result = await response.data?.message
-      if (result === 'Login successful') {
-        showSnackbar(result, 'info')
+      const resultMsg = response.data?.message
+      if (resultMsg === 'Login successful.') {
+        let edxUserInfo: EdxUserInfo = {
+          email: '',
+          header_urls: {
+            logout: '',
+            account_settings: '',
+            learner_profile: ''
+          },
+          user_image_urls: {
+            full: '',
+            large: '',
+            medium: '',
+            small: ''
+          },
+          username: '',
+          version: 0
+        }
+        const edxUserInfoRaw: string = response.data?.credentials['edx-user-info'].replace(/\\054/g, ',').replace(/\\/g, '') ?? ''
+
+        if (edxUserInfoRaw.startsWith('"') && edxUserInfoRaw.endsWith('"')) {
+          edxUserInfo = JSON.parse(`${edxUserInfoRaw.slice(1, -1)}`) as EdxUserInfo
+        }
+
+        const credData: OpenEdxCredentials = {
+          csrfToken: response.data?.credentials.csrftoken,
+          edxUserInfo,
+          edxJwtCookieHeaderPayload: response.data?.credentials['edx-jwt-cookie-header-payload'],
+          edxJwtCookieSignature: response.data?.credentials['edx-jwt-cookie-signature'],
+          edxLoggedIn: JSON.parse(response.data?.credentials.edxloggedin),
+          openedxLanguagePreference: response.data?.credentials['openedx-language-preference'],
+          sessionId: response.data?.credentials.sessionid
+        }
+
+        await login(credData)
+        showSnackbar(resultMsg, 'info')
       } else {
         showSnackbar('Network response was not ok', 'error')
       }
@@ -70,10 +106,15 @@ const LoginForm: FunctionComponent = () => {
       resetForm()
     } catch (error: any) {
       const errorCode = error?.response?.data?.errorCode
+      const errorVal = error?.response?.data?.errorVal
 
       const accumulatedErrors = {
         usernameOrEmail: '',
         password: ''
+      }
+
+      if (errorVal === 'There was an error receiving your login information. Please email us.') {
+        showSnackbar("We couldn't sign you in. In order to sign in, you need to activate your account. We just sent an activation link to . If you do not receive an email, check your spam folders or contact LearnX support.", 'error')
       }
 
       if (errorCode === 'inactive-user') {
@@ -83,7 +124,11 @@ const LoginForm: FunctionComponent = () => {
       }
 
       console.error('Form submission error:', error)
-      showSnackbar('Login failed!', 'error')
+      if (errorCode === 'incorrect-email-or-password') {
+        showSnackbar('Email or password is incorrect!', 'error')
+      } else {
+        showSnackbar('Login failed!', 'error')
+      }
     } finally {
       setSubmitting(false)
     }
