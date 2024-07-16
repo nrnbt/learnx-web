@@ -6,6 +6,7 @@ import { theme } from '@/themes/mui-theme'
 import { FunctionComponent, PropsWithChildren } from 'react'
 import { AuthProvider } from '@/providers/auth'
 import { SnackbarProvider } from '@/providers/toaster'
+import { NotifProvider } from '@/providers/notif'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,7 +25,9 @@ const RootLayout: FunctionComponent<PropsWithChildren> = ({ children }) => {
         <ThemeProvider theme={theme}>
           <AuthProvider>
             <SnackbarProvider>
-              {children}
+              <NotifProvider>
+                {children}
+              </NotifProvider>
             </SnackbarProvider>
           </AuthProvider>
         </ThemeProvider>

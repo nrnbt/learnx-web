@@ -92,7 +92,6 @@ const CourseOutlineInfo: FunctionComponent<Props> = ({ outline }) => {
           </Typography>
         </CardContent>
       </Card>
-      <Alert severity='info'>This is an informational alert — check it out!</Alert>
     </div>
   )
 }

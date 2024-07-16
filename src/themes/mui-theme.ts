@@ -26,7 +26,7 @@ export const theme = createTheme({
             color: '#000'
           },
           '&:hover': {
-            backgroundColor: '#D1F571'
+            // backgroundColor: '#D1F571'
           }
         },
         textPrimary: {
@@ -36,19 +36,43 @@ export const theme = createTheme({
           }
         },
         containedPrimary: {
+          backgroundColor: '#191A2C',
+          '&:hover': {
+            backgroundColor: '#2E3048'
+          }
+        },
+        outlinedPrimary: {
+          borderColor: '#191A2C',
+          borderRadius: '40px',
+          backgroundColor: 'transparent',
+          color: 'white',
+          borderWidth: '2px',
+          '&:hover': {
+            borderColor: '#2E3048',
+            borderWidth: '2px'
+          },
+          paddingX: '20px'
+        },
+        textSecondary: {
+          borderRadius: '0px',
+          '&:hover': {
+            backgroundColor: 'transparent'
+          }
+        },
+        containedSecondary: {
           backgroundColor: '#A7E628',
           '&:hover': {
             backgroundColor: '#D1F571'
           }
         },
-        outlinedPrimary: {
+        outlinedSecondary: {
           borderColor: '#A7E628',
           borderRadius: '40px',
           color: 'white',
           borderWidth: '2px',
           '&:hover': {
             borderColor: '#D1F571',
-            color: 'black'
+            borderWidth: '2px'
           },
           paddingX: '20px'
         }

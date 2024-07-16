@@ -19,8 +19,8 @@ export async function GET (request: Request): Promise<Response> {
     }
 
     return NextResponse.json(data)
-  } catch (error) {
-    console.error(error)
+  } catch (error: any) {
+    console.error(error?.response ?? error)
     return new Response(JSON.stringify({ error: 'Failed to fetch courses' }), {
       status: 500,
       headers: {

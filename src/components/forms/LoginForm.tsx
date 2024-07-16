@@ -87,6 +87,8 @@ const LoginForm: FunctionComponent = () => {
           edxUserInfo = JSON.parse(`${edxUserInfoRaw.slice(1, -1)}`) as EdxUserInfo
         }
 
+        const credRawData = response.data?.credentials
+
         const credData: OpenEdxCredentials = {
           csrfToken: response.data?.credentials.csrftoken,
           edxUserInfo,
@@ -97,7 +99,7 @@ const LoginForm: FunctionComponent = () => {
           sessionId: response.data?.credentials.sessionid
         }
 
-        await login(credData)
+        await login(credData, credRawData)
         showSnackbar(resultMsg, 'info')
       } else {
         showSnackbar('Network response was not ok', 'error')
@@ -179,7 +181,7 @@ const LoginForm: FunctionComponent = () => {
               <ErrorMessage name='password' component='div' className='absolute -bottom-6 text-red-500 text-sm mt-1' />
             </FormField>
 
-            <Button type='submit' variant='contained' color='primary' fullWidth disabled={isSubmitting}>
+            <Button type='submit' variant='contained' color='secondary' fullWidth disabled={isSubmitting}>
               Login
             </Button>
           </Form>

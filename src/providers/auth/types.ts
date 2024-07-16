@@ -25,11 +25,22 @@ export interface OpenEdxCredentials {
   sessionId: string
 }
 
+export interface OpenEdxCredentialsRaw {
+  csrf_token: string
+  edx_user_info: EdxUserInfo
+  edx_jwt_cookie_header_payload: string
+  edx_jwt_cookie_signature: string
+  edx_logged_in: boolean
+  openedx_language_preference: string
+  sessionid: string
+}
+
 export interface AuthContext {
-  login: (cred: OpenEdxCredentials) => Promise<void>
+  login: (cred: OpenEdxCredentials, credRaw: OpenEdxCredentialsRaw) => Promise<void>
   logout: () => Promise<void>
   isLoggedIn: boolean
   credentials?: OpenEdxCredentials | null
+  credentialsRaw?: OpenEdxCredentialsRaw | null
   loaded: boolean
 }
 

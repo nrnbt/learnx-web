@@ -186,7 +186,7 @@ const RegisterForm: FunctionComponent<Props> = ({ courseId }) => {
               <ErrorMessage name='password' component='div' className='absolute -bottom-6 text-red-500 text-sm mt-1' />
             </FormField>
 
-            <Button type='submit' variant='contained' color='primary' fullWidth disabled={isSubmitting}>
+            <Button type='submit' variant='contained' color='secondary' fullWidth disabled={isSubmitting}>
               Register
             </Button>
           </Form>

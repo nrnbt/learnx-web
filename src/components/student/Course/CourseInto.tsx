@@ -91,6 +91,7 @@ const CourseIntro: FunctionComponent<Props> = ({ courseData, courseDate, courseH
           <div className='pt-4'>
             <Button
               variant='contained'
+              color='secondary'
               onClick={handleEnroll}
               className='font-bold'
             >

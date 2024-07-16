@@ -15,8 +15,8 @@ const CoursePage: FunctionComponent<Props> = async ({ params: { id } }) => {
     try {
       const res = await apiClient.get<Course>(`/courses/v1/courses/${courseId}`)
       return res.data
-    } catch (error) {
-      console.error(error)
+    } catch (error: any) {
+      console.error(error?.response?.data ?? error)
       return null
     }
   }
@@ -25,8 +25,8 @@ const CoursePage: FunctionComponent<Props> = async ({ params: { id } }) => {
     try {
       const res = await apiClient.get<CourseDate>(`/course_home/v1/dates/${courseId}`)
       return res.data
-    } catch (error) {
-      console.error(error)
+    } catch (error: any) {
+      console.error(error?.response?.data ?? error)
       return null
     }
   }
@@ -35,8 +35,8 @@ const CoursePage: FunctionComponent<Props> = async ({ params: { id } }) => {
     try {
       const res = await apiClient.get<CourseHomeMeta>(`/course_home/v1/course_metadata/${courseId}`)
       return res.data
-    } catch (error) {
-      console.error(error)
+    } catch (error: any) {
+      console.error(error?.response?.data ?? error)
       return null
     }
   }
@@ -48,7 +48,7 @@ const CoursePage: FunctionComponent<Props> = async ({ params: { id } }) => {
         outline: res.data
       }
     } catch (error: any) {
-      console.error(error)
+      console.error(error?.response?.data ?? error)
       return {
         detail: error?.response?.data?.detail
       }
