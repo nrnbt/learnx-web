@@ -11,8 +11,15 @@ import { FunctionComponent, useEffect, useState } from 'react'
 const DashboardPage: FunctionComponent = () => {
   const [courses, setCourses] = useState<Course[]>([])
   const [loading, setLoading] = useState(false)
-  const { credentials, loaded } = useAuthContext()
+
+  const { loaded, isLoggedIn } = useAuthContext()
   const { showSnackbar } = useSnackbar()
+
+  useEffect(() => {
+    if (loaded && isLoggedIn) {
+      handleFetchInitData().catch(() => {})
+    }
+  }, [loaded, isLoggedIn])
 
   const handleFetchInitData = async (): Promise<void> => {
     setLoading(true)
@@ -27,32 +34,31 @@ const DashboardPage: FunctionComponent = () => {
       })
       .catch((e) => {
         console.error(e)
-        showSnackbar(e, 'error')
+        const errorMessage = e.response?.data?.message ?? e.message ?? 'An error occurred'
+        showSnackbar(errorMessage, 'error')
       })
       .finally(() => {
         setLoading(false)
       })
   }
 
-  if (!loaded || loading) {
-    return <CircularProgress size={50} />
-  }
-
-  useEffect(() => {
-    if (loaded) {
-      handleFetchInitData().catch(() => {})
-    }
-  }, [loaded])
-
   return (
     <div>
-      {courses.map((course, idx) => {
-        return (
-          <div key={idx}>
-            {course.name}
-          </div>
-        )
-      })}
+      {
+        !loaded || loading
+          ? (
+            <CircularProgress size={50} />
+            )
+          : (
+              courses.map((course, idx) => {
+                return (
+                  <div key={idx}>
+                    {course.name}
+                  </div>
+                )
+              })
+            )
+      }
     </div>
   )
 }

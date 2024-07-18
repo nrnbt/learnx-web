@@ -177,3 +177,82 @@ export interface CourseOutlineRes {
   outline?: CourseOutline
   detail?: string
 }
+
+export interface EmailConfirmation {
+  isNeeded: boolean
+  sendEmailUrl: string
+}
+
+export interface PlatformSettings {
+  supportEmail: string
+  billingEmail: string
+  courseSearchUrl: string
+}
+
+export interface CourseProvider {
+  name: string
+}
+
+export interface CourseRun {
+  isStarted: boolean
+  isArchived: boolean
+  courseId: string
+  minPassingGrade: string
+  startDate: string
+  endDate: string | null
+  homeUrl: string
+  marketingUrl: string | null
+  progressUrl: string
+  unenrollUrl: string
+  upgradeUrl: string | null
+  resumeUrl: string
+}
+
+export interface CoursewareAccess {
+  hasUnmetPrerequisites: boolean
+  isTooEarly: boolean
+  isStaff: boolean
+}
+
+export interface Enrollment {
+  accessExpirationDate: string | null
+  isAudit: boolean
+  hasStarted: boolean
+  coursewareAccess: CoursewareAccess
+  isVerified: boolean
+  canUpgrade: boolean
+  isAuditAccessExpired: boolean
+  isEmailEnabled: boolean
+  hasOptedOutOfEmail: boolean
+  lastEnrolled: string
+  isEnrolled: boolean
+  mode: string
+}
+
+export interface Certificate {
+  availableDate: string | null
+  isRestricted: boolean
+  isEarned: boolean
+}
+
+export interface CourseInit {
+  bannerImgSrc: string
+  courseName: string
+  courseNumber: string
+  socialShareUrl: string
+}
+
+export interface CourseInitItem {
+  course: CourseInit
+  courseProvider: CourseProvider
+  courseRun: CourseRun
+  enrollment: Enrollment
+  certificate: Certificate
+}
+
+export interface CourseInitRes {
+  emailConfirmation: EmailConfirmation
+  enterpriseDashboard: any
+  platformSettings: PlatformSettings
+  courses: CourseInitItem[]
+}

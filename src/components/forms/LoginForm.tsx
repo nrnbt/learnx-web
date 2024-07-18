@@ -4,6 +4,7 @@ import { useAuthContext } from '@/providers/auth'
 import { EdxUserInfo, OpenEdxCredentials } from '@/providers/auth/types'
 import { useSnackbar } from '@/providers/toaster'
 import { encryptData } from '@/utils/crypro'
+import { replaceAllSlash } from '@/utils/json-data-cleaner'
 import { Button, TextField } from '@mui/material'
 import { styled } from '@mui/system'
 import axios from 'axios'
@@ -81,13 +82,12 @@ const LoginForm: FunctionComponent = () => {
           username: '',
           version: 0
         }
-        const edxUserInfoRaw: string = response.data?.credentials['edx-user-info'].replace(/\\054/g, ',').replace(/\\/g, '') ?? ''
+        const credRawData = response.data?.credentials
+        const edxUserInfoRaw: string = replaceAllSlash(response.data?.credentials['edx-user-info'])
 
         if (edxUserInfoRaw.startsWith('"') && edxUserInfoRaw.endsWith('"')) {
           edxUserInfo = JSON.parse(`${edxUserInfoRaw.slice(1, -1)}`) as EdxUserInfo
         }
-
-        const credRawData = response.data?.credentials
 
         const credData: OpenEdxCredentials = {
           csrfToken: response.data?.credentials.csrftoken,
