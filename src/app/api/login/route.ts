@@ -35,8 +35,8 @@ export async function POST (request: Request): Promise<Response> {
             'Content-Type': 'application/x-www-form-urlencoded',
             'X-CSRFToken': csrfToken,
             Cookie: `csrftoken=${csrfToken ?? ''}`,
-            Referer: process.env.NEXT_PUBLIC_ENDPOINT ?? 'https://lms.learnx.mn',
-            Origin: process.env.NEXT_PUBLIC_ENDPOINT ?? 'https://lms.learnx.mn'
+            Referer: process.env.LEARNX_OPEN_EDX_URL ?? 'https://lms.learnx.mn',
+            Origin: process.env.LEARNX_OPEN_EDX_URL ?? 'https://lms.learnx.mn'
           }
         })
 

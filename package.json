@@ -17,6 +17,7 @@
     "axios": "^1.7.2",
     "classnames": "^2.5.1",
     "crypto-js": "^4.2.0",
+    "dayjs": "^1.11.12",
     "formik": "^2.4.6",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",

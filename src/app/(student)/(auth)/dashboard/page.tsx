@@ -1,15 +1,16 @@
 'use client'
 
+import CourseComponent from '@/components/student/Course'
 import { useAuthContext } from '@/providers/auth'
 import { useSnackbar } from '@/providers/toaster'
-import { Course } from '@/utils/data-types'
+import { CourseInitItem, CourseInitRes } from '@/utils/data-types'
 import { isNOU } from '@/utils/null-check'
 import { CircularProgress } from '@mui/material'
 import axios from 'axios'
 import { FunctionComponent, useEffect, useState } from 'react'
 
 const DashboardPage: FunctionComponent = () => {
-  const [courses, setCourses] = useState<Course[]>([])
+  const [courses, setCourses] = useState<CourseInitItem[]>([])
   const [loading, setLoading] = useState(false)
 
   const { loaded, isLoggedIn } = useAuthContext()
@@ -23,9 +24,10 @@ const DashboardPage: FunctionComponent = () => {
 
   const handleFetchInitData = async (): Promise<void> => {
     setLoading(true)
-    await axios.get<{ courses: Course[] }>('/api/dashboard')
+    await axios.get<CourseInitRes>('/api/dashboard')
       .then((res) => {
         if (!isNOU(res.data.courses)) {
+          console.log(res.data)
           setCourses(res.data.courses)
         } else {
           console.error('My courses not found!')
@@ -43,20 +45,25 @@ const DashboardPage: FunctionComponent = () => {
   }
 
   return (
-    <div>
+    <div className='flex flex-col justify-start w-full'>
       {
         !loaded || loading
           ? (
-            <CircularProgress size={50} />
+            <div className='w-full flex justify-center'>
+              <CircularProgress size={50} style={{ color: 'white' }} />
+            </div>
             )
           : (
-              courses.map((course, idx) => {
+            <div className='flex flex-col'>
+              <div className='text-nowrap text-white w-full text-2xl mb-4 pl-2 font-bold'><span>My Courses</span></div>
+              {courses.map((course, idx) => {
                 return (
                   <div key={idx}>
-                    {course.name}
+                    <CourseComponent course={course} />
                   </div>
                 )
-              })
+              })}
+            </div>
             )
       }
     </div>

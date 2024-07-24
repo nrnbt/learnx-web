@@ -1,9 +1,9 @@
-import { Stack, Menu, MenuList, MenuItem, ListItemIcon, ListItemText, Typography, Divider, Avatar, IconButton } from '@mui/material'
-import Link from 'next/link'
-import { Fragment, FunctionComponent, useState } from 'react'
 import DashboardIcon from '@mui/icons-material/Dashboard'
-import PersonIcon from '@mui/icons-material/Person'
 import LogoutIcon from '@mui/icons-material/Logout'
+import PersonIcon from '@mui/icons-material/Person'
+import { Avatar, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, Typography } from '@mui/material'
+import Link from 'next/link'
+import { FunctionComponent, useState } from 'react'
 
 interface ProfileMenuItem {
   href: string
@@ -88,7 +88,7 @@ const ProfileMenu: FunctionComponent = () => {
             const { href, icon: MenuIcon, name } = item
 
             return (
-              <Fragment key={idx}>
+              <Link href={href} key={idx}>
                 <MenuItem onClick={handleProMenuClose}>
                   <ListItemIcon>
                     {MenuIcon}
@@ -100,7 +100,7 @@ const ProfileMenu: FunctionComponent = () => {
                   </ListItemText>
                 </MenuItem>
                 {idx === profileMenuItems.length - 2 && <Divider />}
-              </Fragment>
+              </Link>
             )
           })}
         </MenuList>
