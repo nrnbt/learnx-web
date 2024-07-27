@@ -296,3 +296,55 @@ export interface ProfileImage {
   image_url_medium: string
   image_url_small: string
 }
+
+export interface CompletionSummary {
+  [key: string]: string | null
+}
+
+export interface CourseGrade {
+  letter_grade: string
+  percent: number
+  is_passing: boolean
+}
+
+export interface CreditCourseRequirements {
+  [key: string]: string | null
+}
+
+export interface GradingPolicy {
+  assignment_policies: string
+  grade_range: {
+    [key: string]: string | null
+  }
+}
+
+export interface SectionScores {
+  display_name: string
+  subsections: any[] // Replace with actual subsection type if available
+}
+
+export interface VerificationData {
+  link: string
+  status: string
+  status_date: string // Date-time string
+}
+
+export interface CourseProgress {
+  can_show_upgrade_sock: string
+  verified_mode: string
+  access_expiration: { [key: string]: string | null }
+  certificate_data: CertificateData
+  completion_summary: CompletionSummary
+  course_grade: CourseGrade
+  credit_course_requirements: CreditCourseRequirements
+  end: string // Date-time string
+  enrollment_mode: string
+  grading_policy: GradingPolicy
+  has_scheduled_content: boolean
+  section_scores: SectionScores[]
+  studio_url: string
+  username: string
+  user_has_passing_grade: boolean
+  verification_data: VerificationData
+  disable_progress_graph: boolean
+}

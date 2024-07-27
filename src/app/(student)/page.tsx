@@ -61,7 +61,7 @@ const HomePage: FunctionComponent = () => {
   }
 
   return (
-    <div className='w-full'>
+    <div className='w-full h-full'>
       <div className='flex flex-col lg:flex-row justify-center my-8 gap-8 md:gap-32 w-full'>
         <Typography
           component='div'
