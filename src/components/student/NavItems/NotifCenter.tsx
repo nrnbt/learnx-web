@@ -35,7 +35,7 @@ const NotifCenter: FunctionComponent = () => {
         aria-haspopup='true'
         sx={{ color: 'black' }}
       >
-        <Badge badgeContent={4} color='secondary'>
+        <Badge badgeContent={unreadCount} color='secondary'>
           <NotificationsIcon style={{ color: 'white' }} />
         </Badge>
       </IconButton>

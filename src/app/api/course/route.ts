@@ -10,7 +10,7 @@ export async function GET (request: Request): Promise<Response> {
 
     let data
 
-    if (!isNOU(page) && !!isNOU(pageSize)) {
+    if (!isNOU(page) && !isNOU(pageSize) && page !== '' && pageSize !== '') {
       const res = await apiClient.get(`/courses/v1/courses/?page=${page ?? ''}&page_size=${pageSize ?? ''}`)
       data = res.data
     } else {

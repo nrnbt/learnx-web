@@ -1,98 +1,123 @@
-'use client'
-
-import CustomTabPanel from '@/components/tab/CustomTabPanel'
-import { useAuthContext } from '@/providers/auth'
-import { useSnackbar } from '@/providers/toaster'
-import { CourseProgress } from '@/utils/data-types'
+import CourseStudy from '@/components/student/Course/Learn'
+import apiClient from '@/utils/api-client'
+import { CourseBlockData, CourseProgress, LearningSequence } from '@/utils/data-types'
 import { isNOU } from '@/utils/null-check'
-import { Box, CircularProgress, Tab, Tabs } from '@mui/material'
-import axios from 'axios'
-import { FunctionComponent, useEffect, useState, SyntheticEvent } from 'react'
+import { CircularProgress } from '@mui/material'
+import { cookies } from 'next/headers'
+import { FunctionComponent } from 'react'
 
-const StudyPage: FunctionComponent<{ params: { id: string } }> = ({ params: { id } }) => {
-  const courseId = id
-  const [courseProgress, setCourseProgress] = useState<CourseProgress | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [value, setValue] = useState(0)
+interface Props {
+  params: {
+    id: string
+  }
+}
 
-  const { loaded, isLoggedIn } = useAuthContext()
-  const { showSnackbar } = useSnackbar()
+const CoursePage: FunctionComponent<Props> = async ({ params: { id } }) => {
+  const cookieStore = cookies()
+  const userCookies = cookieStore.getAll()
+  const cookieStrings: string[] = userCookies.map(cookie => `${cookie.name}=${cookie.value}`)
 
-  useEffect(() => {
-    if (loaded && isLoggedIn && typeof courseId === 'string') {
-      handleFetchCourseProgress(courseId).catch(() => {})
-    }
-  }, [loaded, isLoggedIn, courseId])
+  let loading = false
 
-  const handleFetchCourseProgress = async (courseId: string): Promise<void> => {
-    setLoading(true)
-    await axios.get(`/api/study?courseId=${courseId}`)
-      .then((res) => {
-        if (!isNOU(res.data)) {
-          setCourseProgress(res.data)
+  const getUsernameFromCookies = (): string | null => {
+    const edxUserInfoCookie = userCookies.find(cookie => cookie.name === 'edx-user-info')
+    if (edxUserInfoCookie != null) {
+      const decodedValue = decodeURIComponent(edxUserInfoCookie.value)
+      try {
+        const userInfo = JSON.parse(decodedValue)
+        if (typeof userInfo === 'string') {
+          const userInfoParsed = JSON.parse(userInfo)
+          return userInfoParsed.username
         } else {
-          console.error('Course progress not found!')
-          showSnackbar('Course progress not found!', 'error')
+          return userInfo.username
         }
-      })
-      .catch((e) => {
-        console.error(e)
-        const errorMessage = e.response?.data?.message ?? e.message ?? 'An error occurred'
-        showSnackbar(errorMessage, 'error')
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+      } catch (error) {
+        console.error('Failed to parse JSON:', error)
+        return null
+      }
+    }
+    return null
   }
 
-  const handleChange = (event: SyntheticEvent, newValue: number): void => {
-    setValue(newValue)
+  const username = getUsernameFromCookies()
+
+  const fetchCourseOutlineSequence = async (courseId: string): Promise<LearningSequence | null> => {
+    loading = true
+    try {
+      const url = `/learning_sequences/v1/course_outline/${courseId}`
+      const res = await apiClient.get<LearningSequence>(url, {
+        headers: {
+          Cookie: cookieStrings.join('; ')
+        }
+      })
+      loading = false
+      return res.data
+    } catch (error: any) {
+      console.error(error?.response?.data ?? error)
+      loading = false
+      return null
+    }
+  }
+
+  const fetchCourseProgress = async (courseId: string): Promise<CourseProgress | null> => {
+    loading = true
+    try {
+      const res = await apiClient.get<CourseProgress>(`/course_home/progress/${courseId}`, {
+        headers: {
+          Cookie: cookieStrings.join('; ')
+        }
+      })
+      loading = false
+      return res.data
+    } catch (error: any) {
+      console.error(error?.response?.data ?? error)
+      loading = false
+      return null
+    }
+  }
+
+  const fetchCourseBlocks = async (courseId: string): Promise<CourseBlockData | null> => {
+    loading = true
+    try {
+      const url = `/course_home/v1/navigation/${courseId}`
+      const res = await apiClient.get<CourseBlockData>(url, {
+        headers: {
+          Cookie: cookieStrings.join('; ')
+        }
+      })
+      loading = false
+      return res.data
+    } catch (error: any) {
+      console.error(error?.response?.data ?? error)
+      loading = false
+      return null
+    }
+  }
+
+  if (isNOU(id)) {
+    return null
+  }
+
+  const courseProgress = await fetchCourseProgress(id)
+  const learningSequence = await fetchCourseOutlineSequence(id)
+  const courseBlocks = await fetchCourseBlocks(id)
+
+  if (loading) {
+    return (
+      <div className='w-full flex justify-center'>
+        <CircularProgress size={50} style={{ color: 'white' }} />
+      </div>
+    )
   }
 
   return (
-    <div className='flex flex-col justify-start w-full'>
-      {
-        !loaded || loading
-          ? (
-            <div className='w-full flex justify-center'>
-              <CircularProgress size={50} style={{ color: 'white' }} />
-            </div>
-            )
-          : (
-            <Box sx={{ width: '100%' }}>
-              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={value} onChange={handleChange} aria-label='Study Page Tabs'>
-                  <Tab label='Course' />
-                  <Tab label='Progress' />
-                </Tabs>
-              </Box>
-              <CustomTabPanel value={value} index={0}>
-                <div className='text-white'>
-                  {/* Course Content */}
-                  <div className='text-nowrap text-white w-full text-2xl mb-4 pl-2 font-bold'><span>Course Details</span></div>
-                  {/* Add your course details here */}
-                </div>
-              </CustomTabPanel>
-              <CustomTabPanel value={value} index={1}>
-                <div className='text-white'>
-                  {/* Progress Content */}
-                  <div className='text-nowrap text-white w-full text-2xl mb-4 pl-2 font-bold'><span>Course Progress</span></div>
-                  {!isNOU(courseProgress)
-                    ? (
-                      <div className='text-white'>
-                        {/* Add more details about the course progress here */}
-                      </div>
-                      )
-                    : (
-                      <p className='text-white'>No progress data available.</p>
-                      )}
-                </div>
-              </CustomTabPanel>
-            </Box>
-            )
-      }
-    </div>
+    <CourseStudy
+      courseId={id}
+      courseProgress={courseProgress}
+      courseBlocks={courseBlocks}
+      learningSequence={learningSequence}
+    />
   )
 }
 
-export default StudyPage
+export default CoursePage

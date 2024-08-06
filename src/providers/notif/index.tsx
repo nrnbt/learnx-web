@@ -38,8 +38,8 @@ export const NotifProvider: FunctionComponent<PropsWithChildren> = ({ children }
       withCredentials: true
     })
       .then((res) => {
-        if (!isNOU(res.data?.notifications)) {
-          setNotifications(res.data?.notifications)
+        if (!isNOU(res.data?.results)) {
+          setNotifications(res.data?.results)
         } else {
           console.error('Notifications not found!')
           showSnackbar('Notifications not found!', 'error')

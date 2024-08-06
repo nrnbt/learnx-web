@@ -348,3 +348,92 @@ export interface CourseProgress {
   verification_data: VerificationData
   disable_progress_graph: boolean
 }
+
+export interface Lti {
+  lti_1p1_client_key: string
+  lti_1p1_client_secret: string
+  lti_1p1_launch_url: string
+  version: string
+  lti_config: any
+}
+
+export interface CourseLive {
+  course_key: string
+  provider_type: string
+  enabled: boolean
+  lti_configuration: Lti
+  pii_sharing_allowed: string
+  free_tier: boolean
+}
+
+export interface CourseLiveRes {
+  courseLive?: CourseLive
+  detail?: string
+}
+
+export interface LearningSequence {
+  course_key: string
+  course_start: string
+  course_end: string | null
+  title: string
+  published_at: string
+  published_version: string
+  entrance_exam_id: string | null
+  days_early_for_beta: number | null
+  self_paced: boolean
+  username: string
+  user_id: number
+  at_time: string
+  outline: SequenceOutline
+}
+
+export interface SequenceOutline {
+  sections: Section[]
+  sequences: { [key: string]: Sequence }
+}
+
+export interface Section {
+  id: string
+  title: string
+  sequence_ids: string[]
+  start: string | null
+  effective_start: string
+}
+
+export interface Sequence {
+  id: string
+  title: string
+  accessible: boolean
+  inaccessible_after_due: boolean
+  start: string | null
+  effective_start: string
+  due: string | null
+}
+
+export interface Block {
+  children: string[]
+  childrenBlocks?: Block[]
+  complete: boolean
+  description: string | null
+  display_name: string
+  due: string | null
+  effort_activities: string | null
+  effort_time: string | null
+  icon: string | null
+  id: string
+  lms_web_url: string | null
+  resume_block: boolean
+  type: string
+  has_scheduled_content: boolean
+  hide_from_toc: boolean
+  completion_stat: {
+    completion: number
+    completable_children: number
+  }
+}
+
+export interface CourseBlockData {
+  blocks: {
+    [key: string]: Block
+  }
+}
