@@ -60,16 +60,18 @@ const StudentAppBar: FunctionComponent = () => {
           </Typography>
 
           <Box sx={{ flex: 1, display: { xs: 'flex', md: 'none' }, justifyContent: 'center' }}>
-            <IconButton
-              size='large'
-              aria-label='account of current user'
-              aria-controls='menu-appbar'
-              aria-haspopup='true'
-              onClick={(e) => setAnchorElNav(e.currentTarget)}
-              color='inherit'
-            >
-              <MenuIcon />
-            </IconButton>
+            <div style={{ display: 'flex', width: '100%', justifyContent: 'start' }}>
+              <IconButton
+                size='large'
+                aria-label='account of current user'
+                aria-controls='menu-appbar'
+                aria-haspopup='true'
+                onClick={(e) => setAnchorElNav(e.currentTarget)}
+                color='inherit'
+              >
+                <MenuIcon />
+              </IconButton>
+            </div>
             <Menu
               id='menu-appbar'
               anchorEl={anchorElNav}

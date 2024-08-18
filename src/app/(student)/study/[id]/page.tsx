@@ -19,27 +19,25 @@ const CoursePage: FunctionComponent<Props> = async ({ params: { id } }) => {
 
   let loading = false
 
-  const getUsernameFromCookies = (): string | null => {
-    const edxUserInfoCookie = userCookies.find(cookie => cookie.name === 'edx-user-info')
-    if (edxUserInfoCookie != null) {
-      const decodedValue = decodeURIComponent(edxUserInfoCookie.value)
-      try {
-        const userInfo = JSON.parse(decodedValue)
-        if (typeof userInfo === 'string') {
-          const userInfoParsed = JSON.parse(userInfo)
-          return userInfoParsed.username
-        } else {
-          return userInfo.username
-        }
-      } catch (error) {
-        console.error('Failed to parse JSON:', error)
-        return null
-      }
-    }
-    return null
-  }
-
-  const username = getUsernameFromCookies()
+  // const getUsernameFromCookies = (): string | null => {
+  //   const edxUserInfoCookie = userCookies.find(cookie => cookie.name === 'edx-user-info')
+  //   if (edxUserInfoCookie != null) {
+  //     const decodedValue = decodeURIComponent(edxUserInfoCookie.value)
+  //     try {
+  //       const userInfo = JSON.parse(decodedValue)
+  //       if (typeof userInfo === 'string') {
+  //         const userInfoParsed = JSON.parse(userInfo)
+  //         return userInfoParsed.username
+  //       } else {
+  //         return userInfo.username
+  //       }
+  //     } catch (error) {
+  //       console.error('Failed to parse JSON:', error)
+  //       return null
+  //     }
+  //   }
+  //   return null
+  // }
 
   const fetchCourseOutlineSequence = async (courseId: string): Promise<LearningSequence | null> => {
     loading = true

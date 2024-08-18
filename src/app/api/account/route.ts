@@ -31,7 +31,6 @@ export async function GET (request: Request): Promise<Response> {
     // Access the learner_profile URL
     const learnerProfileUrl = edxUserInfoJSON.header_urls.learner_profile
 
-    console.log(learnerProfileUrl)
     const res = await apiClient.get<CourseInitRes>('/user/v1/accounts/', {
       headers: {
         Cookie: cookies

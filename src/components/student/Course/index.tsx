@@ -2,7 +2,7 @@ import { CourseInitItem } from '@/utils/data-types'
 import { Button } from '@mui/material'
 import cn from 'classnames'
 import dayjs from 'dayjs'
-import Link from 'next/link'
+// import Link from 'next/link'
 import { FunctionComponent } from 'react'
 
 interface Props {
@@ -11,7 +11,6 @@ interface Props {
 }
 
 const CourseComponent: FunctionComponent<Props> = ({ className, course }) => {
-  console.log(course)
   return (
     <div className={cn('flex max-w-[800px] w-full justify-between shadow-2xl p-4 rounded-lg border border-secondary', className)}>
       <div className='flex w-full'>
@@ -38,9 +37,9 @@ const CourseComponent: FunctionComponent<Props> = ({ className, course }) => {
       <div className='flex w-full justify-end items-end'>
         <div>
           <Button variant='contained' color='secondary'>
-            <Link href={'/study/' + course.courseRun.courseId}>
-              Resume
-            </Link>
+            {/* <Link href={'/study/' + course.courseRun.courseId}> */}
+            Resume
+            {/* </Link> */}
           </Button>
         </div>
       </div>

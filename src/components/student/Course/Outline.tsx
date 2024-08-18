@@ -1,8 +1,8 @@
-import { FunctionComponent } from 'react'
-import { Card, CardContent, Typography, Alert } from '@mui/material'
 import { CourseOutline } from '@/utils/data-types'
-import Link from 'next/link'
 import { isNOU } from '@/utils/null-check'
+import { Card, CardContent, Typography } from '@mui/material'
+import Link from 'next/link'
+import { FunctionComponent } from 'react'
 
 interface Props {
   outline: CourseOutline
@@ -84,7 +84,10 @@ const CourseOutlineInfo: FunctionComponent<Props> = ({ outline }) => {
           )}
           {outline.resume_course.has_visited_course && !isNOU(outline.resume_course.url) && (
             <Typography variant='body2' color='text.secondary'>
-              Resume Course: <Link href={outline.resume_course.url} target='_blank' rel='noopener noreferrer'>Continue Learning</Link>
+              Resume Course:
+              {/* <Link href={outline.resume_course.url} target='_blank' rel='noopener noreferrer'> */}
+              Continue Learning
+              {/* </Link> */}
             </Typography>
           )}
           <Typography variant='body2' color='text.secondary'>

@@ -1,10 +1,10 @@
 'use client'
 
-import { useAuthContext } from '@/providers/auth'
+// import { useAuthContext } from '@/providers/auth'
 import { Course, CourseDate, CourseHomeMeta, CourseOutlineRes } from '@/utils/data-types'
 import { isNOU } from '@/utils/null-check'
 import { Box, Button } from '@mui/material'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
 import { FunctionComponent, useEffect, useState } from 'react'
 import '../../../../public/css/lms.main.css'
 
@@ -41,8 +41,8 @@ const CourseIntro: FunctionComponent<Props> = ({ courseData, courseDate, courseH
   // const [value, setValue] = useState(0)
   const [overviewWithBaseUrl, setOverviewWithBaseUrl] = useState('')
 
-  const { isLoggedIn } = useAuthContext()
-  const router = useRouter()
+  // const { isLoggedIn } = useAuthContext()
+  // const router = useRouter()
 
   useEffect(() => {
     if (typeof window !== 'undefined' && !isNOU(window.DOMParser)) {
@@ -51,22 +51,20 @@ const CourseIntro: FunctionComponent<Props> = ({ courseData, courseDate, courseH
     }
   }, [courseData, baseUrl])
 
-  console.log(courseData)
-
   // const handleChange = (event: SyntheticEvent, newValue: number): void => {
   //   setValue(newValue)
   // }
 
   const handleEnroll = (): void => {
-    if (isLoggedIn) {
-      if (!isNOU(courseHomeMeta) && courseHomeMeta.is_enrolled) {
-        router.push(`/study/${courseData?.id ?? ''}`)
-      } else {
-        router.push(`/enroll/${courseData?.id ?? ''}`)
-      }
-    } else {
-      router.push('/login')
-    }
+    // if (isLoggedIn) {
+    //   if (!isNOU(courseHomeMeta) && courseHomeMeta.is_enrolled) {
+    //     router.push(`/study/${courseData?.id ?? ''}`)
+    //   } else {
+    //     router.push(`/enroll/${courseData?.id ?? ''}`)
+    //   }
+    // } else {
+    //   router.push('/login')
+    // }
   }
 
   return (
@@ -85,7 +83,8 @@ const CourseIntro: FunctionComponent<Props> = ({ courseData, courseDate, courseH
               onClick={handleEnroll}
               className='font-bold'
             >
-              {!isNOU(courseHomeMeta) && courseHomeMeta.is_enrolled ? 'Resume' : 'Enroll Now'}
+              Enroll Now
+              {/* {!isNOU(courseHomeMeta) && courseHomeMeta.is_enrolled ? 'Resume' : 'Enroll Now'} */}
             </Button>
           </div>
         </div>

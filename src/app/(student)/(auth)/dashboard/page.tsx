@@ -27,7 +27,6 @@ const DashboardPage: FunctionComponent = () => {
     await axios.get<CourseInitRes>('/api/dashboard')
       .then((res) => {
         if (!isNOU(res.data.courses)) {
-          console.log(res.data)
           setCourses(res.data.courses)
         } else {
           console.error('My courses not found!')

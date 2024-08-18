@@ -22,19 +22,22 @@ const CourseStudy: FunctionComponent<Props> = ({ courseId, courseBlocks, courseP
   const [currentBlockContent, setCurrentBlockContent] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  const [data, setData] = useState<CourseBlockData>(courseBlocks ?? { blocks: {} });
-  const [nestedData, setNestedData] = useState<Block[]>([]);
+  const data = useState<CourseBlockData>(courseBlocks ?? { blocks: {} })
+  const [nestedData, setNestedData] = useState<Block[]>([])
 
   useEffect(() => {
     const transformData = (blockId: string, data: CourseBlockData): Block => {
-      const block = { ...data.blocks[blockId] };
-      block.childrenBlocks = block.children.map(childId => transformData(childId, data));
-      return block;
-    };
+      const block = { ...data.blocks[blockId] }
+      block.childrenBlocks = block.children.map(childId => transformData(childId, data))
+      return block
+    }
 
-    const newNestedData: Block[] = Object.keys(data.blocks).map(blockId => transformData(blockId, data));
-    setNestedData(newNestedData);
-  }, [data]);
+    const newNestedData: Block[] = Object.keys(data[0]).map(blockId => transformData(blockId, data[0]))
+    setNestedData(newNestedData)
+
+    const blockId = Object.keys(data[0])[0]
+    fetchBlockContent(blockId).catch((e) => console.error(e))
+  }, [data])
 
   const transformBlocks = (data: CourseBlockData): CourseBlockData => {
     const blocks = data.blocks
@@ -89,8 +92,6 @@ const CourseStudy: FunctionComponent<Props> = ({ courseId, courseBlocks, courseP
   const rootBlocks = Object.values(transformedData.blocks).filter(
     block => !Object.values(transformedData.blocks).some(b => b.children.includes(block.id))
   )
-
-  console.log(nestedData)
 
   const renderBlocks = (block: Block): JSX.Element => {
     return (
