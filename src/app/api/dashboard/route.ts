@@ -3,8 +3,9 @@ import { CourseInitRes } from '@/utils/data-types'
 import { NextResponse } from 'next/server'
 
 export async function GET (request: Request): Promise<Response> {
+  const cookies = request.headers.get('Cookie')
+
   try {
-    const cookies = request.headers.get('Cookie')
     const res = await apiClient.get<CourseInitRes>('/learner_home/init/', {
       headers: {
         Cookie: cookies

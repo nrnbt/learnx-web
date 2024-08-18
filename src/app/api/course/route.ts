@@ -3,8 +3,9 @@ import { isNOU } from '@/utils/null-check'
 import { NextResponse } from 'next/server'
 
 export async function GET (request: Request): Promise<Response> {
+  const { searchParams } = new URL(request.url)
+
   try {
-    const { searchParams } = new URL(request.url)
     const page = searchParams.get('page')
     const pageSize = searchParams.get('page_size')
 
