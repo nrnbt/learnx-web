@@ -1,13 +1,19 @@
 'use client'
 
 import MenuIcon from '@mui/icons-material/Menu'
+import {
+  Divider,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText
+} from '@mui/material'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
 import IconButton from '@mui/material/IconButton'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import cn from 'classnames'
@@ -15,6 +21,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { FunctionComponent, useState } from 'react'
 import NavigationItems from './NavItems'
+import CopyRight from './CopyRight'
 
 interface NavPage {
   name: string
@@ -29,19 +36,19 @@ const pages: NavPage[] = [
 ]
 
 const StudentAppBar: FunctionComponent = () => {
-  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null)
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState<boolean>(false)
 
   const pathname = usePathname()
 
   return (
-    <AppBar position='static'>
+    <AppBar position='static' className='h-full'>
       <Container maxWidth='xl'>
         <Toolbar disableGutters className='flex justify-between'>
           <Typography
             variant='h6'
             noWrap
             component='a'
-            href='#app-bar-with-responsive-menu'
+            href='/'
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -59,52 +66,70 @@ const StudentAppBar: FunctionComponent = () => {
             />
           </Typography>
 
-          <Box sx={{ flex: 1, display: { xs: 'flex', md: 'none' }, justifyContent: 'center' }}>
-            <div style={{ display: 'flex', width: '100%', justifyContent: 'start' }}>
+          <Box
+            sx={{
+              flex: 1,
+              display: { xs: 'flex', md: 'none' },
+              justifyContent: 'center'
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                width: '100%',
+                justifyContent: 'start'
+              }}
+            >
               <IconButton
                 size='large'
-                aria-label='account of current user'
-                aria-controls='menu-appbar'
                 aria-haspopup='true'
-                onClick={(e) => setAnchorElNav(e.currentTarget)}
+                onClick={(e) => setMobileDrawerOpen(!mobileDrawerOpen)}
                 color='inherit'
               >
                 <MenuIcon />
               </IconButton>
             </div>
-            <Menu
-              id='menu-appbar'
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left'
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left'
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={() => setAnchorElNav(null)}
-              sx={{
-                display: { xs: 'block', md: 'none' }
-              }}
+            <Drawer
+              open={mobileDrawerOpen}
+              onClose={() => setMobileDrawerOpen(false)}
             >
-              {pages.map((page, idx) => (
-                <MenuItem key={idx}>
-                  <Link href={page.link}>
-                    <Typography textAlign='center'>{page.name}</Typography>
-                  </Link>
-                </MenuItem>
-              ))}
-            </Menu>
+              <Box sx={{ width: 250 }} role='presentation'>
+                <List>
+                  {pages.map((page, idx) => (
+                    <ListItem key={idx} disablePadding>
+                      <ListItemButton>
+                        <Link
+                          href={page.link}
+                          onClick={() => setMobileDrawerOpen(false)}
+                        >
+                          <ListItemText primary={page.name} />
+                        </Link>
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+                </List>
+                <Divider />
+                <List>
+                  <ListItem>
+                    <ListItemButton>
+                      <Link href='/login'>Login</Link>
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemButton>
+                      <Link href='/register'>Register</Link>
+                    </ListItemButton>
+                  </ListItem>
+                </List>
+                <CopyRight className='text-black text-sm p-4' />
+              </Box>
+            </Drawer>
           </Box>
 
           <Typography
             variant='h5'
             noWrap
             component='a'
-            href='#app-bar-with-responsive-menu'
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -123,7 +148,14 @@ const StudentAppBar: FunctionComponent = () => {
             />
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, width: '100%', justifyContent: 'center' }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'none', md: 'flex' },
+              width: '100%',
+              justifyContent: 'center'
+            }}
+          >
             {pages.map((page, idx) => (
               <Button
                 key={idx}
@@ -131,9 +163,12 @@ const StudentAppBar: FunctionComponent = () => {
                 variant='text'
               >
                 <Link href={page.link}>
-                  <div className={cn(
-                    'absolute top-0 bottom-0 right-0 left-0',
-                    pathname === page.link && 'border-b border-secondary transition-all duration-300 ease-in')}
+                  <div
+                    className={cn(
+                      'absolute top-0 bottom-0 right-0 left-0',
+                      pathname === page.link &&
+                        'border-b border-secondary transition-all duration-300 ease-in'
+                    )}
                   />
                   <div className='text-white'>{page.name}</div>
                 </Link>
@@ -142,7 +177,6 @@ const StudentAppBar: FunctionComponent = () => {
           </Box>
 
           <NavigationItems />
-
         </Toolbar>
       </Container>
     </AppBar>

@@ -5,10 +5,10 @@ import CourseSwiper from '@/components/student/Course/Swiper'
 import Testimonial from '@/components/student/Testimonial'
 import { useSnackbar } from '@/providers/toaster'
 import useCourse from '@/services/courses'
-import { theme } from '@/themes/mui-theme'
 import { Course } from '@/utils/data-types'
 import { isNOU } from '@/utils/null-check'
-import { Box, Button, CircularProgress, Typography, useMediaQuery } from '@mui/material'
+import { Box, Button, CircularProgress, Typography } from '@mui/material'
+import Link from 'next/link'
 import { FunctionComponent, useEffect, useState } from 'react'
 
 const testimonials = [
@@ -29,8 +29,6 @@ const testimonials = [
 const HomePage: FunctionComponent = () => {
   const [topCourses, setTopCourses] = useState<Course[]>([])
   const [coursesloading, setCoursesloading] = useState(false)
-
-  const mobileLayout = useMediaQuery(theme.breakpoints.up('md'))
 
   const { getCourses } = useCourse()
   const { showSnackbar } = useSnackbar()
@@ -60,21 +58,22 @@ const HomePage: FunctionComponent = () => {
       })
   }
 
+  console.log(topCourses)
+
   return (
     <div className='w-full h-full'>
       <div className='flex flex-col lg:flex-row justify-center my-8 gap-8 md:gap-32 w-full'>
         <Typography
           component='div'
           gutterBottom
-          className='flex flex-col justify-center mb-0 text-white'
-          style={{ fontSize: !mobileLayout ? '40px' : '80px', fontWeight: 'bold' }}
+          className='flex flex-col justify-center mb-0 text-white text-[40px] md:text-[80px] font-bold'
         >
-          <span>GROW UP</span>
-          <span className='flex gap-4'>
-            <span className='text-secondary'>{'YOUR '}</span>
+          <span className='text-center md:text-start'>GROW UP</span>
+          <span className='flex gap-4 w-full justify-center md:justify-start'>
+            <span className='text-secondary '>{'YOUR '}</span>
             <span>SKILL</span>
           </span>
-          <span> IN MINUTES</span>
+          <span className='text-center md:text-start'> IN MINUTES</span>
         </Typography>
         <div className='flex justify-center mt-8 md:mt-0'>
           <div className='relative flex justify-center items-center h-64 md:h-96 w-52 md:w-96'>
@@ -111,7 +110,7 @@ const HomePage: FunctionComponent = () => {
       </div>
       <div className='flex flex-col lg:flex-row justify-center my-8 gap-8 md:gap-16 w-full'>
         <Typography component='div' gutterBottom className='flex flex-col gap-8 text-[40px] md:text-[60px] font-bold justify-center items-center mb-0 text-white'>
-          <div>Wanna become <div className='flex'>Learn <div className='text-secondary'>X</div>’s Teacher?</div></div>
+          <div>Want to become <div className='flex'>Learn <div className='text-secondary'>X</div>’s Teacher?</div></div>
           <Button
             size='large'
             sx={{
@@ -126,7 +125,7 @@ const HomePage: FunctionComponent = () => {
             variant='contained'
             className='text-black'
           >
-            Become teacher
+            <Link href={process.env.NEXT_PUBLIC_LEARNX_STUDIO_URL ?? ''}>Become Teacher</Link>
           </Button>
         </Typography>
         <div className='flex items-center justify-center'>

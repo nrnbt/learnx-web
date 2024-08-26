@@ -1,8 +1,9 @@
 import { FunctionComponent } from 'react'
+import CopyRight from './CopyRight'
 
 const StudentFooter: FunctionComponent = () => {
   return (
-    <div className='flex justify-center bg-tertiary p-8'>
+    <div className='flex flex-col items-center justify-center bg-tertiary p-8 h-full'>
       <div className='flex flex-col md:flex-row justify-between max-w-7xl w-full'>
         <div className='grid grid-cols-1 md:grid-cols-3 text-white'>
           <ul className='list-disc list-inside'>
@@ -27,7 +28,7 @@ const StudentFooter: FunctionComponent = () => {
             <li className='mb-2'>Accessibility statement</li>
           </ul>
         </div>
-        <div className='flex h-full justify-end items-end p-4'>
+        <div className='flex justify-end items-end p-4'>
           <img
             src='/LearnX-logo.png'
             alt='LearnX logo'
@@ -35,6 +36,7 @@ const StudentFooter: FunctionComponent = () => {
           />
         </div>
       </div>
+      <CopyRight className='text-white' />
     </div>
   )
 }

@@ -1,20 +1,22 @@
-import { useAuthContext } from '@/providers/auth'
+import { authConfig } from '@/utils/auth'
+import { isNOU } from '@/utils/null-check'
 import { Box, Button, Stack } from '@mui/material'
+import { getServerSession } from 'next-auth'
 import Link from 'next/link'
 import { FunctionComponent } from 'react'
 import NotifCenter from './NotifCenter'
 import ProfileMenu from './ProfileMenu'
 
-const NavigationItems: FunctionComponent = () => {
-  const { isLoggedIn, loaded } = useAuthContext()
+const NavigationItems: FunctionComponent = async () => {
+  const session = await getServerSession(authConfig)
 
   return (
     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-      {isLoggedIn && loaded
+      {!isNOU(session?.user.credentials)
         ? (
           <Stack direction='row' alignItems='center' spacing={{ xs: 0.5, sm: 1.5 }} sx={{ color: 'black' }}>
             <NotifCenter />
-            <ProfileMenu />
+            <ProfileMenu session={session} />
           </Stack>
           )
         : (

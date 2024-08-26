@@ -125,7 +125,12 @@ const RegisterForm: FunctionComponent<Props> = ({ courseId }) => {
 
   return (
     <Container className='flex flex-col gap-8 w-full items-center'>
-      <Title className='flex text-white font-semibold text-2xl'>Register as student in Learn<div className='text-secondary'>X</div>.</Title>
+      <Title className='text-white font-semibold text-2xl'>
+        <div className='flex'>
+          Register as student in Learn
+          <div className='text-secondary'>X</div>.
+        </div>
+      </Title>
       <Formik
         initialValues={innitialValues}
         validationSchema={validationSchema}

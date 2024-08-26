@@ -1,18 +1,15 @@
-'use client'
+import { authConfig } from '@/utils/auth'
+import { isNOU } from '@/utils/null-check'
+import { getServerSession } from 'next-auth'
+import { redirect } from 'next/navigation'
+import { FunctionComponent, PropsWithChildren } from 'react'
 
-import { useAuthContext } from '@/providers/auth'
-import { useRouter } from 'next/navigation'
-import { FunctionComponent, PropsWithChildren, useEffect } from 'react'
+const StudentAuthLayout: FunctionComponent<PropsWithChildren> = async ({ children }) => {
+  const session = await getServerSession(authConfig)
 
-const StudentAuthLayout: FunctionComponent<PropsWithChildren> = ({ children }) => {
-  const { isLoggedIn, loaded } = useAuthContext()
-  const router = useRouter()
-
-  useEffect(() => {
-    if (loaded && !isLoggedIn) {
-      router.push('/login')
-    }
-  }, [loaded, isLoggedIn])
+  if (isNOU(session) || isNOU(session.user.cookies) || isNOU(session.user.cookies)) {
+    redirect('/login')
+  }
 
   return (
     <div className='flex h-full w-full justify-center items-center'>

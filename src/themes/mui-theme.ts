@@ -105,7 +105,10 @@ export const theme = createTheme({
           },
           width: '100%',
           '& .MuiInputLabel-root': {
-            color: '#a0a0b0'
+            color: '#a0a0b0',
+            '&.Mui-focused': {
+              color: 'white !important'
+            }
           },
           '& .MuiInput-underline:before': {
             borderBottomColor: '#3b3b5c'

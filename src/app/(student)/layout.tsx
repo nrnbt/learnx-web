@@ -4,11 +4,11 @@ import { FunctionComponent, PropsWithChildren } from 'react'
 
 const StudentLayout: FunctionComponent<PropsWithChildren> = ({ children }) => {
   return (
-    <main className='flex max-h-screen h-full flex-col'>
+    <main className='flex flex-col min-h-screen'>
       <StudentAppBar />
-      <div className='flex justify-center h-full w-full bg-primary-light'>
-        <div className='flex flex-col justify-center items-center max-w-7xl h-full w-full'>
-          <div className='flex py-5 md:py-10 px-4 w-full min-h-[356.5px] h-full'>
+      <div className='flex-grow flex justify-center bg-primary-light'>
+        <div className='flex flex-col justify-center items-center max-w-7xl w-full'>
+          <div className='flex py-6 md:py-10 px-4 w-full'>
             {children}
           </div>
         </div>

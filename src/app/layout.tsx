@@ -1,13 +1,12 @@
+import { NotifProvider } from '@/providers/notif'
+import { SnackbarProvider } from '@/providers/toaster'
+import { theme } from '@/themes/mui-theme'
+import { ThemeProvider } from '@mui/material'
+import cn from 'classnames'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import './globals.css'
-import { ThemeProvider } from '@mui/material'
-import { theme } from '@/themes/mui-theme'
 import { FunctionComponent, PropsWithChildren } from 'react'
-import { AuthProvider } from '@/providers/auth'
-import { SnackbarProvider } from '@/providers/toaster'
-import { NotifProvider } from '@/providers/notif'
-import cn from 'classnames'
+import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -22,15 +21,13 @@ const RootLayout: FunctionComponent<PropsWithChildren> = ({ children }) => {
       <head>
         <link rel='icon' href='/favicon.ico' sizes='16' />
       </head>
-      <body className={cn(inter.className, 'min-h-screen')}>
+      <body className={cn(inter.className)}>
         <ThemeProvider theme={theme}>
-          <AuthProvider>
-            <SnackbarProvider>
-              <NotifProvider>
-                {children}
-              </NotifProvider>
-            </SnackbarProvider>
-          </AuthProvider>
+          <SnackbarProvider>
+            <NotifProvider>
+              {children}
+            </NotifProvider>
+          </SnackbarProvider>
         </ThemeProvider>
       </body>
     </html>

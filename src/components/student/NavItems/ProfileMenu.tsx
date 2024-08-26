@@ -2,6 +2,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard'
 import LogoutIcon from '@mui/icons-material/Logout'
 import PersonIcon from '@mui/icons-material/Person'
 import { Avatar, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, Typography } from '@mui/material'
+import { Session } from 'next-auth'
 import Link from 'next/link'
 import { FunctionComponent, useState } from 'react'
 
@@ -29,7 +30,11 @@ const profileMenuItems: ProfileMenuItem[] = [
   }
 ]
 
-const ProfileMenu: FunctionComponent = () => {
+interface Props {
+  session?: Session
+}
+
+const ProfileMenu: FunctionComponent<Props> = ({ session }) => {
   const [proMenuAnchorEl, setProMenuAnchorEl] = useState<HTMLButtonElement | null>(null)
   const profileMenuOpen = Boolean(proMenuAnchorEl)
 
@@ -38,7 +43,7 @@ const ProfileMenu: FunctionComponent = () => {
   }
 
   const profilePictureSrc = (): string => {
-    return ''
+    return session?.user?.image ?? ''
   }
 
   return (
