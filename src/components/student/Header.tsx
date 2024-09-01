@@ -22,6 +22,7 @@ import { usePathname } from 'next/navigation'
 import { FunctionComponent, useState } from 'react'
 import NavigationItems from './NavItems'
 import CopyRight from './CopyRight'
+import { SessionProvider } from 'next-auth/react'
 
 interface NavPage {
   name: string
@@ -175,8 +176,9 @@ const StudentAppBar: FunctionComponent = () => {
               </Button>
             ))}
           </Box>
-
-          <NavigationItems />
+          <SessionProvider>
+            <NavigationItems />
+          </SessionProvider>
         </Toolbar>
       </Container>
     </AppBar>

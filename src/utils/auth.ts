@@ -10,6 +10,7 @@ import apiClient from './api-client'
 import { isNOU } from './null-check'
 import { EdxUserInfo, OpenEdxCredentials } from '@/providers/auth/types'
 import { replaceAllSlash } from './json-data-cleaner'
+import { encryptData } from './crypro'
 
 interface TokenRes {
   csrfToken: string
@@ -26,6 +27,123 @@ declare module 'next-auth' {
   interface User {
     credentials: OpenEdxCredentials
     cookies: string[]
+  }
+}
+
+const ssoAuthentication = async (email: string): Promise<User> => {
+  const existingUser = await apiClient.get<Array<{ email: string }>>(`/user/v1/accounts/?email=${email ?? ''}`)
+
+  if (isNOU(existingUser.data[0].email)) {
+    const formData = new FormData()
+
+    formData.append('username', email.split('@')[0])
+    formData.append('password', encryptData(email))
+    formData.append('email', email)
+    formData.append('name', email.split('@')[0])
+
+    const registerResponse = await apiClient.post('/user/v2/account/registration/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Referer: 'https://www.learnx.mn'
+      }
+    })
+
+    if (registerResponse.status !== 201) {
+      throw new Error('Failed to register user with Open edX.')
+    }
+  }
+  const user = await openEdxLoginData({ email: existingUser.data[0].email, password: encryptData(existingUser.data[0].email) })
+  return user
+}
+
+const openEdxLoginData = async (credentials: { email: string, password: string }): Promise<User> => {
+  const formData = new FormData()
+
+  formData.append('email_or_username', credentials.email)
+  formData.append('password', credentials.password)
+
+  const formDataObject: any = {}
+  formData.forEach((value, key) => {
+    formDataObject[key] = value
+  })
+
+  const urlEncodedData = new URLSearchParams(formDataObject).toString()
+
+  const mainPageResponse = await axios.get<TokenRes>(process.env.LEARNX_OPEN_EDX_CSRF_TOKEN_URL ?? 'https://lms.learnx.mn/csrf/api/v1/token')
+  const csrfToken = mainPageResponse.data.csrfToken
+
+  const response = await apiClient.post(
+    '/user/v2/account/login_session/',
+    urlEncodedData,
+    {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': csrfToken,
+        Cookie: `csrftoken=${csrfToken ?? ''}`,
+        Referer: process.env.LEARNX_OPEN_EDX_URL ?? 'https://lms.learnx.mn',
+        Origin: process.env.LEARNX_OPEN_EDX_URL ?? 'https://lms.learnx.mn'
+      }
+    }
+  )
+
+  if (!isNOU(response) && !isNOU(response?.data?.success) && response.data.success === true) {
+    const cookies = response.headers['set-cookie'] ?? []
+
+    const credentials: any = {}
+
+    cookies.forEach((cookie) => {
+      const cookieParts = cookie.split(';')[0]
+      const [key, value] = cookieParts.split('=')
+      credentials[key] = value
+    })
+
+    let edxUserInfo: EdxUserInfo = {
+      email: '',
+      header_urls: {
+        logout: '',
+        account_settings: '',
+        learner_profile: ''
+      },
+      user_image_urls: {
+        full: '',
+        large: '',
+        medium: '',
+        small: ''
+      },
+      username: '',
+      version: 0
+    }
+    const edxUserInfoRaw: string = replaceAllSlash(credentials['edx-user-info'])
+
+    if (edxUserInfoRaw.startsWith('"') && edxUserInfoRaw.endsWith('"')) {
+      edxUserInfo = JSON.parse(`${edxUserInfoRaw.slice(1, -1)}`) as EdxUserInfo
+    }
+
+    const credData: OpenEdxCredentials = {
+      csrfToken: credentials.csrftoken,
+      edxUserInfo,
+      edxJwtCookieHeaderPayload:
+        credentials['edx-jwt-cookie-header-payload'],
+      edxJwtCookieSignature:
+        credentials['edx-jwt-cookie-signature'],
+      edxLoggedIn: JSON.parse(credentials.edxloggedin),
+      openedxLanguagePreference:
+        credentials['openedx-language-preference'],
+      sessionId: credentials.sessionid
+    }
+
+    const user: User = {
+      id: edxUserInfo.email,
+      email: edxUserInfo.email,
+      name: edxUserInfo.username,
+      image: edxUserInfo.user_image_urls.medium,
+      credentials: credData,
+      cookies
+    }
+
+    return user
+  } else {
+    throw new Error('Failed to login!')
   }
 }
 
@@ -46,94 +164,8 @@ export const authConfig: NextAuthOptions = {
           throw new Error('Missing credentials')
         }
         try {
-          const formData = new FormData()
-
-          formData.append('email_or_username', credentials.email)
-          formData.append('password', credentials.password)
-
-          const formDataObject: any = {}
-          formData.forEach((value, key) => {
-            formDataObject[key] = value
-          })
-
-          const urlEncodedData = new URLSearchParams(formDataObject).toString()
-
-          const mainPageResponse = await axios.get<TokenRes>(process.env.LEARNX_OPEN_EDX_CSRF_TOKEN_URL ?? 'https://lms.learnx.mn/csrf/api/v1/token')
-          const csrfToken = mainPageResponse.data.csrfToken
-
-          const response = await apiClient.post(
-            '/user/v2/account/login_session/',
-            urlEncodedData,
-            {
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': csrfToken,
-                Cookie: `csrftoken=${csrfToken ?? ''}`,
-                Referer: process.env.LEARNX_OPEN_EDX_URL ?? 'https://lms.learnx.mn',
-                Origin: process.env.LEARNX_OPEN_EDX_URL ?? 'https://lms.learnx.mn'
-              }
-            }
-          )
-
-          if (!isNOU(response) && !isNOU(response?.data?.success) && response.data.success === true) {
-            const cookies = response.headers['set-cookie'] ?? []
-
-            const credentials: any = {}
-
-            cookies.forEach((cookie) => {
-              const cookieParts = cookie.split(';')[0]
-              const [key, value] = cookieParts.split('=')
-              credentials[key] = value
-            })
-
-            let edxUserInfo: EdxUserInfo = {
-              email: '',
-              header_urls: {
-                logout: '',
-                account_settings: '',
-                learner_profile: ''
-              },
-              user_image_urls: {
-                full: '',
-                large: '',
-                medium: '',
-                small: ''
-              },
-              username: '',
-              version: 0
-            }
-            const edxUserInfoRaw: string = replaceAllSlash(credentials['edx-user-info'])
-
-            if (edxUserInfoRaw.startsWith('"') && edxUserInfoRaw.endsWith('"')) {
-              edxUserInfo = JSON.parse(`${edxUserInfoRaw.slice(1, -1)}`) as EdxUserInfo
-            }
-
-            const credData: OpenEdxCredentials = {
-              csrfToken: credentials.csrftoken,
-              edxUserInfo,
-              edxJwtCookieHeaderPayload:
-                credentials['edx-jwt-cookie-header-payload'],
-              edxJwtCookieSignature:
-                credentials['edx-jwt-cookie-signature'],
-              edxLoggedIn: JSON.parse(credentials.edxloggedin),
-              openedxLanguagePreference:
-                credentials['openedx-language-preference'],
-              sessionId: credentials.sessionid
-            }
-
-            const user: User = {
-              id: edxUserInfo.email,
-              email: edxUserInfo.email,
-              name: edxUserInfo.username,
-              image: edxUserInfo.user_image_urls.medium,
-              credentials: credData,
-              cookies
-            }
-
-            return user
-          } else {
-            throw new Error('Failed to login!')
-          }
+          const user = await openEdxLoginData(credentials)
+          return user
         } catch (error: any) {
           throw new Error(
             error?.response?.data?.value ?? (error ?? 'Error occurred')
@@ -151,6 +183,22 @@ export const authConfig: NextAuthOptions = {
     })
   ],
   callbacks: {
+    async signIn ({ user, account, profile, email, credentials }) {
+      try {
+        if (!isNOU(user) && !isNOU(user.email)) {
+          const data = await ssoAuthentication(user.email)
+          if (isNOU(data)) {
+            throw new Error('Failed to authenticate user.')
+          }
+          return data
+        } else {
+          throw new Error('Failed to authenticate user.')
+        }
+      } catch (error) {
+        console.error('Error during sign-in:', error)
+        return false
+      }
+    },
     async jwt ({ token, user }) {
       if (!isNOU(user)) {
         token.user = user
