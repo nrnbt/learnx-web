@@ -1,21 +1,16 @@
 'use client'
 
-import { useAuthContext } from '@/providers/auth'
-import { EdxUserInfo, OpenEdxCredentials } from '@/providers/auth/types'
 import { useSnackbar } from '@/providers/toaster'
-import { encryptData } from '@/utils/crypro'
-import { replaceAllSlash } from '@/utils/json-data-cleaner'
+import { isNOU } from '@/utils/null-check'
 import { Alert, Button, CircularProgress, TextField } from '@mui/material'
 import { styled } from '@mui/system'
-import axios from 'axios'
 import { ErrorMessage, Form, Formik, FormikHelpers } from 'formik'
+import { signIn } from 'next-auth/react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { FunctionComponent, useState } from 'react'
 import * as Yup from 'yup'
 import { GoogleSignInButton } from './authButtons'
-import { signIn } from 'next-auth/react'
-import { isNOU } from '@/utils/null-check'
-import { useRouter } from 'next/navigation'
 
 interface LoginFormValues {
   emailOrUsername: string
