@@ -58,8 +58,6 @@ const HomePage: FunctionComponent = () => {
       })
   }
 
-  console.log(topCourses)
-
   return (
     <div className='w-full h-full'>
       <div className='flex flex-col lg:flex-row justify-center my-8 gap-8 md:gap-32 w-full'>

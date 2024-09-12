@@ -4,14 +4,14 @@ const getAccessToken = async (): Promise<string> => {
   try {
     const tokenResponse = await axios.post(process.env.LEARNX_OPEN_EDX_OAUTH_URL ?? 'https://lms.learnx.mn/oauth2/access_token', {
       grant_type: 'client_credentials',
-      client_id: process.env.CLIENT_ID,
-      client_secret: process.env.CLIENT_SECRET
+      client_id: process.env.LEARNX_OPEN_EDX_CLIENT_ID,
+      client_secret: process.env.LEARNX_OPEN_EDX_CLIENT_SECRET
     })
 
     return tokenResponse.data.access_token
-  } catch (error) {
-    console.error('Error fetching access token:', error)
-    throw error
+  } catch (error: any) {
+    console.error('Error fetching access token:', error.response?.data.error ?? error)
+    return ''
   }
 }
 
@@ -22,16 +22,16 @@ const apiClient = axios.create({
   }
 })
 
-apiClient.interceptors.request.use(
-  async (config) => {
-    const token = await getAccessToken()
-    config.headers.Authorization = `Bearer ${token}`
-    return config
-  },
-  async (error) => {
-    return await Promise.reject(error)
-  }
-)
+// apiClient.interceptors.request.use(
+//   async (config) => {
+//     const token = await getAccessToken()
+//     config.headers.Authorization = `Bearer ${token}`
+//     return config
+//   },
+//   async (error) => {
+//     return await Promise.reject(error)
+//   }
+// )
 
 apiClient.interceptors.response.use(
   (response) => {

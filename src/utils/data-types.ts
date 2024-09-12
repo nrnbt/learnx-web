@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb'
+
 export interface CourseMedia {
   banner_image: {
     uri: string
@@ -436,4 +438,12 @@ export interface CourseBlockData {
   blocks: {
     [key: string]: Block
   }
+}
+
+export interface Purchase {
+  _id?: ObjectId
+  userId: string
+  courseId: string
+  purchaseDate: Date
+  coupon?: string
 }

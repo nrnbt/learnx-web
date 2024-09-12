@@ -1,18 +1,22 @@
 'use client'
 
 // import { useAuthContext } from '@/providers/auth'
-import { Course, CourseDate, CourseHomeMeta, CourseOutlineRes } from '@/utils/data-types'
+import { Course, CourseDate, CourseHomeMeta, CourseOutlineRes, Purchase } from '@/utils/data-types'
 import { isNOU } from '@/utils/null-check'
 import { Box, Button } from '@mui/material'
 // import { useRouter } from 'next/navigation'
 import { FunctionComponent, useEffect, useState } from 'react'
 import '../../../../public/css/lms.main.css'
+import { useRouter } from 'next/navigation'
+import { Session } from 'next-auth'
 
 interface Props {
   courseData?: Course | null
   courseDate?: CourseDate | null
   courseHomeMeta?: CourseHomeMeta | null
   courseOutline?: CourseOutlineRes | null
+  purchase?: Purchase | null
+  session?: Session | null
 }
 
 // const a11yProps = (index: number): {} => {
@@ -36,13 +40,13 @@ const addBaseUrlToImgSrc = (params: { htmlString?: string, baseUrl: string }): s
   return doc.body.innerHTML
 }
 
-const CourseIntro: FunctionComponent<Props> = ({ courseData, courseDate, courseHomeMeta, courseOutline }) => {
+const CourseIntro: FunctionComponent<Props> = ({ courseData, courseDate, courseHomeMeta, courseOutline, purchase, session }) => {
   const baseUrl = courseData?.blocks_url.split('/api')[0] ?? ''
   // const [value, setValue] = useState(0)
   const [overviewWithBaseUrl, setOverviewWithBaseUrl] = useState('')
 
   // const { isLoggedIn } = useAuthContext()
-  // const router = useRouter()
+  const router = useRouter()
 
   useEffect(() => {
     if (typeof window !== 'undefined' && !isNOU(window.DOMParser)) {
@@ -56,15 +60,15 @@ const CourseIntro: FunctionComponent<Props> = ({ courseData, courseDate, courseH
   // }
 
   const handleEnroll = (): void => {
-    // if (isLoggedIn) {
-    //   if (!isNOU(courseHomeMeta) && courseHomeMeta.is_enrolled) {
-    //     router.push(`/study/${courseData?.id ?? ''}`)
-    //   } else {
-    //     router.push(`/enroll/${courseData?.id ?? ''}`)
-    //   }
-    // } else {
-    //   router.push('/login')
-    // }
+    if (!isNOU(session?.user.cookies)) {
+      if (!isNOU(courseHomeMeta) && courseHomeMeta.is_enrolled && !isNOU(purchase)) {
+        router.push(`/study/${courseData?.id ?? ''}`)
+      } else {
+        router.push(`/checkout/${courseData?.id ?? ''}`)
+      }
+    } else {
+      router.push('/login')
+    }
   }
 
   return (
@@ -83,8 +87,7 @@ const CourseIntro: FunctionComponent<Props> = ({ courseData, courseDate, courseH
               onClick={handleEnroll}
               className='font-bold'
             >
-              Enroll Now
-              {/* {!isNOU(courseHomeMeta) && courseHomeMeta.is_enrolled ? 'Resume' : 'Enroll Now'} */}
+              {!isNOU(courseHomeMeta) && courseHomeMeta.is_enrolled && !isNOU(purchase) ? 'Resume' : ' Enroll Now'}
             </Button>
           </div>
         </div>

@@ -1,29 +1,25 @@
-import { MongoClient } from 'mongodb'
+import { MongoClient, Db } from 'mongodb'
+import { isNOU } from './null-check'
 
-const uri = process.env.MONGODB_URI as string // Ensure MONGODB_URI is defined in your .env.local
-const options: MongoClientOptions = {
-  useUnifiedTopology: true,
-  useNewUrlParser: true
-}
+let db: Db | null = null
 
-let client: MongoClient | null = null
-let clientPromise: Promise<MongoClient>
+const connectDB = async (): Promise<Db> => {
+  if (db != null) return db
 
-if (!process.env.MONGODB_URI) {
-  throw new Error('Please add your Mongo URI to .env.local')
-}
-
-if (process.env.NODE_ENV === 'development') {
-  // In development, use a global variable so that the client is not created multiple times
-  if ((global as any)._mongoClientPromise === undefined) {
-    client = new MongoClient(uri, options);
-    (global as any)._mongoClientPromise = client.connect()
+  if (isNOU(process.env.MONGODB_URI)) {
+    throw new Error('Please add your Mongo URI to .env.local')
   }
-  clientPromise = (global as any)._mongoClientPromise
-} else {
-  // In production, create a new client for each request
-  client = new MongoClient(uri, options)
-  clientPromise = client.connect()
+
+  const client = new MongoClient(process.env.MONGODB_URI, {})
+
+  try {
+    await client.connect()
+    db = client.db('learnx')
+    return db
+  } catch (error) {
+    console.error('Failed to connect to MongoDB', error)
+    throw new Error('Failed to connect to MongoDB')
+  }
 }
 
-export default clientPromise
+export default connectDB

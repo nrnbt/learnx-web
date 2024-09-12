@@ -194,8 +194,8 @@ export const authConfig: NextAuthOptions = {
         } else {
           throw new Error('Failed to authenticate user.')
         }
-      } catch (error) {
-        console.error('Error during sign-in:', error)
+      } catch (error: any) {
+        console.error('Error during sign-in:', error?.response)
         return false
       }
     },

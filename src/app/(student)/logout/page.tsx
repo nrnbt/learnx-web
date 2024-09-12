@@ -1,19 +1,23 @@
 'use client'
 
-import { useAuthContext } from '@/providers/auth'
+import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { FunctionComponent, useEffect } from 'react'
 
 const LogoutPage: FunctionComponent = () => {
-  const { logout } = useAuthContext()
   const router = useRouter()
 
   useEffect(() => {
-    logout()
+    signOut({ callbackUrl: '/' })
       .catch(console.error)
       .finally(() => {
         router.push('/')
       })
+    // logout()
+    //   .catch(console.error)
+    //   .finally(() => {
+    //     router.push('/')
+    //   })
   }, [])
 
   return null
