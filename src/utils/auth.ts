@@ -190,7 +190,7 @@ export const authConfig: NextAuthOptions = {
           if (isNOU(data)) {
             throw new Error('Failed to authenticate user.')
           }
-          return data
+          return !isNOU(data)
         } else {
           throw new Error('Failed to authenticate user.')
         }

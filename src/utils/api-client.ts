@@ -1,19 +1,19 @@
 import axios from 'axios'
 
-const getAccessToken = async (): Promise<string> => {
-  try {
-    const tokenResponse = await axios.post(process.env.LEARNX_OPEN_EDX_OAUTH_URL ?? 'https://lms.learnx.mn/oauth2/access_token', {
-      grant_type: 'client_credentials',
-      client_id: process.env.LEARNX_OPEN_EDX_CLIENT_ID,
-      client_secret: process.env.LEARNX_OPEN_EDX_CLIENT_SECRET
-    })
+// const getAccessToken = async (): Promise<string> => {
+//   try {
+//     const tokenResponse = await axios.post(process.env.LEARNX_OPEN_EDX_OAUTH_URL ?? 'https://lms.learnx.mn/oauth2/access_token', {
+//       grant_type: 'client_credentials',
+//       client_id: process.env.LEARNX_OPEN_EDX_CLIENT_ID,
+//       client_secret: process.env.LEARNX_OPEN_EDX_CLIENT_SECRET
+//     })
 
-    return tokenResponse.data.access_token
-  } catch (error: any) {
-    console.error('Error fetching access token:', error.response?.data.error ?? error)
-    return ''
-  }
-}
+//     return tokenResponse.data.access_token
+//   } catch (error: any) {
+//     console.error('Error fetching access token:', error.response?.data.error ?? error)
+//     return ''
+//   }
+// }
 
 const apiClient = axios.create({
   baseURL: process.env.LEARNX_OPEN_EDX_API ?? 'https://lms.learnx.mn/api',
