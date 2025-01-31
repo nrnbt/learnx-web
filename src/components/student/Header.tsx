@@ -32,8 +32,7 @@ interface NavPage {
 const pages: NavPage[] = [
   { name: 'Home', link: '/' },
   { name: 'Courses', link: '/courses' },
-  { name: 'About Us', link: '/about' },
-  { name: 'Contact', link: '/contact' }
+  { name: 'About Us', link: '/about' }
 ]
 
 const StudentAppBar: FunctionComponent = () => {
