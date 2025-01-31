@@ -1,4 +1,3 @@
-import UnderConstruction from '@/components/UnderConstruction'
 import { FunctionComponent } from 'react'
 
 const AboutPage: FunctionComponent = () => {

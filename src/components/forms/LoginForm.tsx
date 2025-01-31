@@ -10,7 +10,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FunctionComponent, useState } from 'react'
 import * as Yup from 'yup'
-import { GoogleSignInButton } from './authButtons'
 
 interface LoginFormValues {
   emailOrUsername: string
@@ -71,12 +70,6 @@ const LoginForm: FunctionComponent = () => {
   return (
     <Container className='flex flex-col gap-8 w-full items-center'>
       <Title className='flex text-white font-semibold text-3xl'>Login to Learn<div className='text-secondary'>X</div>.</Title>
-      <div className='max-w-96 w-full flex flex-col justify-center items-center'>
-        <GoogleSignInButton />
-        <span className='text-2xl font-semibold text-white text-center mt-4'>
-          Or
-        </span>
-      </div>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
