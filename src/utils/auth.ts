@@ -182,6 +182,7 @@ export const authConfig: NextAuthOptions = {
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string
     })
   ],
+  secret: process.env.NEXT_PUBLIC_SECRET,
   callbacks: {
     async signIn ({ user, account, profile, email, credentials }) {
       try {
